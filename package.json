@@ -1,0 +1,27 @@
+{
+  "name": "stock-market-chart",
+  "version": "1.0.0",
+  "description": "App built on the MEAN stack that allows users to view stock data by adding and removing stocks ticker symbols",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmcilhargey/chart-stock-market.git"
+  },
+  "author": "Joe McIlhargey",
+  "dependencies": {
+    "async": "~0.2.8",
+    "dotenv": "^2.0.0",
+    "express": "^4.13.4",
+    "mongoose": "^4.4.12",
+    "socket.io": "^1.4.5"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "devDependencies": {},
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmcilhargey/chart-stock-market/issues"
+  },
+  "homepage": "https://github.com/jmcilhargey/chart-stock-market#readme"
+}
