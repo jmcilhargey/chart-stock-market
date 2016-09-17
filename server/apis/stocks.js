@@ -15,7 +15,7 @@ module.exports = {
       var format = ".json?"
 
       var dateObj = new Date();
-      var currDate = dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate();
+      var currDate = `${ dateObj.getFullYear() }-${ dateObj.getMonth() + 1 }-${ dateObj.getDate() }`;
 
       var httpsOpts = {
         "api_key": process.env.QUANDL_KEY,

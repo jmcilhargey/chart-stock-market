@@ -1,5 +1,7 @@
 "use strict";
 
+require("./env");
+
 const express = require("express");
 const mongoose = require("mongoose");
 const https = require("https");
@@ -7,8 +9,6 @@ const https = require("https");
 const app = require("express")();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-
-require("./env");
 
 const stocks = require("./apis/stocks");
 
@@ -19,23 +19,37 @@ mongoose.connection.on("error", (error) => {
   process.exit(-1);
 });
 
-app.use(express.static(__dirname + "/../client"));
+app.use(express.static(__dirname + "/../build"));
 
 io.on("connection", (socket) => {
-  console.log("Connected on " + socket);
+  console.log("User connected");
 
-  io.on("disconnect", () => {
-    console.log("Disconnected");
+  socket.on("request_quote", (data) => {
+
+    stocks.getQuote(data.ticker).then((data) => {
+      socket.emit("stock_data", JSON.stringify(data));
+
+    }, (error) => {
+      console.log(error);
+    });
+  });
+
+  socket.on("delete_quote", (data) => {
+    console.log(data);
+  });
+
+  socket.on("change_range", (data) => {
+    console.log(data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
   });
 });
 
 app.route("/api/stock").get((req, res) => {
 
-  stocks.getQuote("AAPL").then((data) => {
-    res.send(data);
-  }, (error) => {
-    res.send(error);
-  });
+
 
 });
 

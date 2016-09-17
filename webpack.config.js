@@ -1,3 +1,5 @@
+var path = require("path");
+
 var HTMLWebpackPlugin = require("html-webpack-plugin");
 var HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
   template: __dirname + "/client/index.html",
@@ -6,19 +8,23 @@ var HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
 });
 
 module.exports = {
-  entry: __dirname + "/client/app.js",
+  entry: path.join(__dirname, "./client/app.js"),
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: "babel-loader"
+      },
+      {
+        test: /\.css$/,
+        loader: "style!css"
       }
     ]
   },
   output: {
-    filename: "bundle.js",
-    path: __dirname + "/build"
+    path: path.join(__dirname, "./build"),
+    filename: "bundle.js"
   },
   plugins: [HTMLWebpackPluginConfig]
 };
