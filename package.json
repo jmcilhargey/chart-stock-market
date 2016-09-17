@@ -13,12 +13,22 @@
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
     "mongoose": "^4.4.12",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
     "socket.io": "^1.4.5"
   },
   "scripts": {
-    "start": "node server.js"
+    "build": "webpack",
+    "start": "webpack-dev-server"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-react": "^6.11.1",
+    "html-webpack-plugin": "^2.22.0",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.2"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jmcilhargey/chart-stock-market/issues"
