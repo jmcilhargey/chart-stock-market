@@ -25,8 +25,8 @@ io.on("connection", (socket) => {
   console.log("User connected");
 
   socket.on("request_quote", (data) => {
-
-    stocks.getQuote(data.ticker).then((data) => {
+    
+    stocks.getQuote(data.stockSymbol).then((data) => {
       socket.emit("stock_data", JSON.stringify(data));
 
     }, (error) => {
