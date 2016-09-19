@@ -20,7 +20,8 @@
   },
   "scripts": {
     "build": "webpack",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "watch": "webpack --progress --colors --watch"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
