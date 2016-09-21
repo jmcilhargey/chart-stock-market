@@ -25,32 +25,27 @@ io.on("connection", (socket) => {
   console.log("User connected");
 
   socket.on("request_quote", (data) => {
-    
-    stocks.getQuote(data.stockSymbol).then((data) => {
-      socket.emit("stock_data", JSON.stringify(data));
 
+    stocks.getQuote(data.stockSymbol).then((data) => {
+      console.log(data);
+      socket.emit("stock_data", data);
     }, (error) => {
       console.log(error);
     });
+
   });
 
   socket.on("delete_quote", (data) => {
     console.log(data);
   });
 
-  socket.on("change_range", (data) => {
+  socket.on("change_dates", (data) => {
     console.log(data);
   });
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
-});
-
-app.route("/api/stock").get((req, res) => {
-
-
-
 });
 
 app.route("/*").get((req, res) => {
