@@ -4,16 +4,20 @@ import * as d3 from "d3";
 
 var D3Graph = {};
 
-D3Graph.clear = function(canvas) {
+D3Graph.clear = function() {
+  
+  var canvas = document.getElementsByTagName("canvas")[0];
   var context = canvas.getContext("2d");
+
+  context.setTransform(1, 0, 0, 1, 0, 0);
   context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-D3Graph.create = function(canvas, data) {
+D3Graph.create = function(data) {
 
   var parseTime = d3.timeParse("%Y-%m-%d");
 
-  var currStockData = data[0].dataset.data.map((day) => {
+  var currStockData = data[data.length - 1].dataset.data.map((day) => {
     return {
       date: parseTime(day[0]),
       price: day[4]
@@ -22,8 +26,9 @@ D3Graph.create = function(canvas, data) {
 
   currStockData.sort((a, b) => a.date - b.date );
 
-  var margin = { top: 15, right: 15, bottom: 20, left: 25 };
+  var margin = { top: 15, right: 15, bottom: 20, left: 30 };
 
+  var canvas = document.getElementsByTagName("canvas")[0];
   var context = canvas.getContext("2d");
 
   var width = canvas.width - margin.right - margin.left;
@@ -69,9 +74,10 @@ D3Graph.create = function(canvas, data) {
   var currencyFormat = d3.format(",.2f");
 
   function showStockPrice(location) {
+
     var approxDate = xScale.invert(location.xPos - margin.left);
     var dateIndex = bisectDate(currStockData, approxDate);
-    console.log(approxDate, dateIndex)
+
     var stockDate = currStockData[dateIndex].date;
     var dateMessage = `${ monthNames[stockDate.getMonth()] } ${ stockDate.getDate() }`;
 
@@ -155,4 +161,4 @@ D3Graph.create = function(canvas, data) {
   }
 }
 
-module.exports = D3Graph;
+export default D3Graph;

@@ -25,7 +25,6 @@ module.exports = {
 
       var fullUrl = baseUrl + stockSym + format + qs(httpsOpts);
 
-
       var request = https.request(fullUrl, (response) => {
 
         var string = "";

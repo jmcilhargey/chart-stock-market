@@ -16,13 +16,14 @@ body {
 
 .stockBox {
   margin: 5em 0;
+  padding: 1em;
   background: #fff;
   display: flex;
   display: -webkit-flex;
   justify-content: center;
   -webkit-justify-content: center;
-  align-items: center;
-  -webkit-align-items: center;
+  align-items: flex-start;
+  -webkit-align-items: flex-start;
   flex-direction: column;
   -webkit-flex-direction: column;
   flex-wrap: wrap;
@@ -43,7 +44,6 @@ body {
 
 .stockForm input[type=text] {
   color: #424242;
-  margin-top: 1em;
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
   font-size: 1.5em;
@@ -52,13 +52,13 @@ body {
 }
 
 .stockForm input[type=submit] {
+  color: #424242;
   cursor: pointer;
-  margin-bottom: 1em;
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
   font-size: 1.25em;
   padding: 0.5em 0;
-  background: #ccc;
+  background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.25);
   outline: none;
 }
