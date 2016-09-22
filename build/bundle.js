@@ -29447,6 +29447,7 @@
 	D3Graph.create = function (data) {
 
 	  var parseTime = d3.timeParse("%Y-%m-%d");
+	  var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
 	  var currStockData = data[data.length - 1].dataset.data.map(function (day) {
 	    return {
@@ -29472,10 +29473,21 @@
 
 	  context.translate(margin.left, margin.top);
 
-	  xScale.domain(d3.extent(currStockData, function (d) {
+	  var allStockData = data.map(function (stock) {
+	    return stock.dataset.data.map(function (day) {
+	      return {
+	        date: parseTime(day[0]),
+	        price: day[4]
+	      };
+	    });
+	  });
+
+	  var flattenedArray = [].concat.apply([], allStockData);
+
+	  xScale.domain(d3.extent(flattenedArray, function (d) {
 	    return d.date;
 	  }));
-	  yScale.domain(d3.extent(currStockData, function (d) {
+	  yScale.domain(d3.extent(flattenedArray, function (d) {
 	    return d.price;
 	  }));
 
@@ -29484,7 +29496,8 @@
 
 	  drawXAxis();
 	  drawYAxis();
-	  drawStockData(currStockData);
+
+	  drawStockData(allStockData);
 
 	  canvas.addEventListener("mousemove", function (e) {
 	    var location = getMouseLocation(e);
@@ -29492,7 +29505,7 @@
 	    if (location.xPos > margin.left && location.xPos < width + margin.left) {
 
 	      context.clearRect(0, 0, canvas.width, canvas.height - margin.bottom - margin.top);
-	      drawStockData(currStockData);
+	      drawStockData(allStockData);
 	      drawVerticalLine(location);
 	      showStockPrice(location);
 	    }
@@ -29545,18 +29558,21 @@
 
 	  function drawStockData(data) {
 
-	    var lineData = d3.line().x(function (d) {
-	      return xScale(d.date);
-	    }).y(function (d) {
-	      return yScale(d.price);
-	    }).context(context);
+	    data.forEach(function (stock, index) {
 
-	    context.beginPath();
-	    lineData(data);
-	    context.strokeStyle = "#6200ea";
-	    context.lineWidth = 1.5;
-	    context.setLineDash([]);
-	    context.stroke();
+	      var lineData = d3.line().x(function (d) {
+	        return xScale(d.date);
+	      }).y(function (d) {
+	        return yScale(d.price);
+	      }).context(context);
+
+	      context.beginPath();
+	      lineData(stock);
+	      context.strokeStyle = colors(index);
+	      context.lineWidth = 2;
+	      context.setLineDash([]);
+	      context.stroke();
+	    });
 	  }
 
 	  function drawXAxis() {
@@ -29568,6 +29584,7 @@
 	      context.moveTo(xScale(t), height);
 	      context.lineTo(xScale(t), height + tickSize);
 	    });
+	    context.font = "10pt Calibri";
 	    context.strokeStyle = "#616161";
 	    context.stroke();
 
@@ -29589,6 +29606,7 @@
 	      context.moveTo(0, yScale(t));
 	      context.lineTo(-6, yScale(t));
 	    });
+	    context.font = "10pt Calibri";
 	    context.strokeStyle = "#616161";
 	    context.stroke();
 

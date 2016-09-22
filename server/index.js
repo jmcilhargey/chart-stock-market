@@ -34,6 +34,8 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
 
       stocks.getQuote(data.stockSymbol).then((data) => {
 
+        console.log(data);
+
         db.collection("stocks").insertOne(data, {
           "w": "majority",
           "wtimeout": 5000,

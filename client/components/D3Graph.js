@@ -5,7 +5,7 @@ import * as d3 from "d3";
 var D3Graph = {};
 
 D3Graph.clear = function() {
-  
+
   var canvas = document.getElementsByTagName("canvas")[0];
   var context = canvas.getContext("2d");
 
@@ -16,6 +16,7 @@ D3Graph.clear = function() {
 D3Graph.create = function(data) {
 
   var parseTime = d3.timeParse("%Y-%m-%d");
+  var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
   var currStockData = data[data.length - 1].dataset.data.map((day) => {
     return {
@@ -39,15 +40,27 @@ D3Graph.create = function(data) {
 
   context.translate(margin.left, margin.top);
 
-  xScale.domain(d3.extent(currStockData, (d) => d.date ));
-  yScale.domain(d3.extent(currStockData, (d) => d.price ));
+  var allStockData = data.map((stock) => {
+    return stock.dataset.data.map((day) => {
+      return {
+        date: parseTime(day[0]),
+        price: day[4]
+      };
+    });
+  });
+
+  var flattenedArray = [].concat.apply([], allStockData);
+
+  xScale.domain(d3.extent(flattenedArray, (d) => d.date ));
+  yScale.domain(d3.extent(flattenedArray, (d) => d.price ));
 
   var tickCount = 10;
   var tickSize = 5;
 
   drawXAxis();
   drawYAxis();
-  drawStockData(currStockData);
+
+  drawStockData(allStockData);
 
   canvas.addEventListener("mousemove", (e) => {
     var location = getMouseLocation(e);
@@ -55,7 +68,7 @@ D3Graph.create = function(data) {
     if (location.xPos > margin.left && location.xPos < width + margin.left) {
 
       context.clearRect(0, 0, canvas.width, canvas.height - margin.bottom - margin.top);
-      drawStockData(currStockData);
+      drawStockData(allStockData);
       drawVerticalLine(location);
       showStockPrice(location);
     }
@@ -106,17 +119,20 @@ D3Graph.create = function(data) {
 
   function drawStockData(data) {
 
-    var lineData = d3.line()
-      .x((d) => xScale(d.date))
-      .y((d) => yScale(d.price))
-      .context(context);
+    data.forEach((stock, index) => {
 
-    context.beginPath();
-    lineData(data);
-    context.strokeStyle = "#6200ea";
-    context.lineWidth = 1.5;
-    context.setLineDash([]);
-    context.stroke();
+      var lineData = d3.line()
+        .x((d) => xScale(d.date))
+        .y((d) => yScale(d.price))
+        .context(context);
+
+      context.beginPath();
+      lineData(stock);
+      context.strokeStyle = colors(index);
+      context.lineWidth = 2;
+      context.setLineDash([]);
+      context.stroke();
+    });
   }
 
   function drawXAxis() {
@@ -128,6 +144,7 @@ D3Graph.create = function(data) {
       context.moveTo(xScale(t), height);
       context.lineTo(xScale(t), height + tickSize);
     });
+    context.font = "10pt Calibri";
     context.strokeStyle = "#616161";
     context.stroke();
 
@@ -149,6 +166,7 @@ D3Graph.create = function(data) {
       context.moveTo(0, yScale(t));
       context.lineTo(-6, yScale(t));
     });
+    context.font = "10pt Calibri";
     context.strokeStyle = "#616161";
     context.stroke();
 
