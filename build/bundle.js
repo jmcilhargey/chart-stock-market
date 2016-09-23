@@ -29452,18 +29452,8 @@
 	D3Graph.create = function (data) {
 
 	  var parseTime = d3.timeParse("%Y-%m-%d");
+	  var formatPercent = d3.format(".2%");
 	  var colors = d3.scaleOrdinal(d3.schemeCategory10);
-
-	  var currStockData = data[data.length - 1].dataset.data.map(function (day) {
-	    return {
-	      date: parseTime(day[0]),
-	      price: day[4]
-	    };
-	  });
-
-	  currStockData.sort(function (a, b) {
-	    return a.date - b.date;
-	  });
 
 	  var margin = { top: 15, right: 15, bottom: 20, left: 30 };
 
@@ -29478,19 +29468,12 @@
 
 	  context.translate(margin.left, margin.top);
 
-	  var allStockData = data.map(function (stock) {
-	    return stock.dataset.data.map(function (day) {
-	      return {
-	        date: parseTime(day[0]),
-	        price: day[4]
-	      };
-	    });
-	  });
-
-	  var flattenedArray = [].concat.apply([], allStockData);
+	  var flattenedArray = [].concat.apply([], data.map(function (d) {
+	    return d.data;
+	  }));
 
 	  xScale.domain(d3.extent(flattenedArray, function (d) {
-	    return d.date;
+	    return new Date(d.date);
 	  }));
 	  yScale.domain(d3.extent(flattenedArray, function (d) {
 	    return d.price;
@@ -29502,7 +29485,7 @@
 	  drawXAxis();
 	  drawYAxis();
 
-	  drawStockData(allStockData);
+	  drawStockData(data);
 
 	  canvas.addEventListener("mousemove", function (e) {
 	    var location = getMouseLocation(e);
@@ -29510,7 +29493,7 @@
 	    if (location.xPos > margin.left && location.xPos < width + margin.left) {
 
 	      context.clearRect(0, 0, canvas.width, canvas.height - margin.bottom - margin.top);
-	      drawStockData(allStockData);
+	      drawStockData(data);
 	      drawVerticalLine(location);
 	      showStockPrice(location);
 	    }
@@ -29525,7 +29508,7 @@
 	  }
 
 	  var bisectDate = d3.bisector(function (d, x) {
-	    return d.date - x;
+	    return new Date(d.date) - x;
 	  }).left;
 	  var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	  var currencyFormat = d3.format(",.2f");
@@ -29533,16 +29516,16 @@
 	  function showStockPrice(location) {
 
 	    var approxDate = xScale.invert(location.xPos - margin.left);
-	    var dateIndex = bisectDate(currStockData, approxDate);
+	    var dateIndex = bisectDate(data[0].data, approxDate);
 
-	    var stockDate = currStockData[dateIndex].date;
+	    var stockDate = new Date(data[0].data[dateIndex].date);
 	    var dateMessage = monthNames[stockDate.getMonth()] + " " + stockDate.getDate();
 
 	    context.font = "20pt Calibri";
 	    context.textAlign = "start";
 	    context.fillText(dateMessage, margin.left, margin.top);
 
-	    var stockPrice = currStockData[dateIndex].price;
+	    var stockPrice = data[0].data[dateIndex].price;
 	    var stockMessage = "$" + currencyFormat(stockPrice);
 
 	    context.font = "20pt Calibri";
@@ -29566,13 +29549,13 @@
 	    data.forEach(function (stock, index) {
 
 	      var lineData = d3.line().x(function (d) {
-	        return xScale(d.date);
+	        return xScale(new Date(d.date));
 	      }).y(function (d) {
 	        return yScale(d.price);
 	      }).context(context);
 
 	      context.beginPath();
-	      lineData(stock);
+	      lineData(stock.data);
 	      context.strokeStyle = colors(index);
 	      context.lineWidth = 2;
 	      context.setLineDash([]);

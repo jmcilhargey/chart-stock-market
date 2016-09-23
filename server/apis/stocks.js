@@ -4,6 +4,7 @@ require("../env");
 
 const https = require("https");
 const qs = require("../helpers/querystring");
+const transform = require("../helpers/transformdata");
 
 module.exports = {
 
@@ -37,10 +38,17 @@ module.exports = {
 
         response.on("end", () => {
           try {
-            resolve({ status: response.statusCode, headers: response.headers, data: JSON.parse(string) });
+            var jsonData = JSON.parse(string);
           } catch (error) {
             reject(error);
           }
+          var formattedData = transform(jsonData);
+          resolve({
+            "status": response.statusCode,
+            "headers": response.headers,
+            "symbol": jsonData.dataset.dataset_code,
+            "data": formattedData
+          });
         });
       });
       request.on("error", (error) => {

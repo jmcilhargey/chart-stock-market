@@ -38,7 +38,7 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
           socket.emit("search_error", { status: value.status, error: value.data.quandl_error.code, symbol: stockSymbol });
 
         } else {
-          db.collection("stocks").insertOne(value.data, {
+          db.collection("stocks").insertOne(value, {
             "w": "majority",
             "wtimeout": 5000,
             "serializeFunctions": true
