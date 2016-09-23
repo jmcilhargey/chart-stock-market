@@ -108,12 +108,17 @@
 
 	    socket.on("add_stock", function (addedStock) {
 
-	      var copyState = _this.state.data.slice();
-	      copyState.push(addedStock);
+	      if (addedStock.error) {} else {
+	        var copyState = _this.state.data.slice();
+	        copyState.push(addedStock);
 
-	      _this.setState({
-	        data: copyState
-	      });
+	        _this.setState({
+	          data: copyState
+	        });
+	      }
+	    });
+	    socket.on("search_error", function (errorMessage) {
+	      console.log(errorMessage);
 	    });
 	  },
 	  render: function render() {

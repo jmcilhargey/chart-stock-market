@@ -37,7 +37,7 @@ module.exports = {
 
         response.on("end", () => {
           try {
-            resolve(JSON.parse(string));
+            resolve({ status: response.statusCode, headers: response.headers, data: JSON.parse(string) });
           } catch (error) {
             reject(error);
           }

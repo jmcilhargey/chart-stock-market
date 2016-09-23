@@ -32,27 +32,30 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
 
     socket.on("request_stock", (data) => {
 
-      stocks.getQuote(data.stockSymbol).then((data) => {
+      stocks.getQuote(data.stockSymbol).then((value) => {
 
-        console.log(data);
+        if (value.status !== 200) {
+          socket.emit("search_error", { status: value.status, error: value.data.quandl_error.code, symbol: stockSymbol });
 
-        db.collection("stocks").insertOne(data, {
-          "w": "majority",
-          "wtimeout": 5000,
-          "serializeFunctions": true
-        }, (err, res) => {
-          if (err) {
-            console.log(err);
-          }
-          db.collection("stocks").findOne({ "_id": res.insertedId }, (err, doc) => {
+        } else {
+          db.collection("stocks").insertOne(value.data, {
+            "w": "majority",
+            "wtimeout": 5000,
+            "serializeFunctions": true
+          }, (err, res) => {
             if (err) {
               console.log(err);
             }
-            socket.emit("add_stock", doc);
+            db.collection("stocks").findOne({ "_id": res.insertedId }, (err, doc) => {
+              if (err) {
+                console.log(err);
+              }
+              socket.emit("add_stock", doc);
+            });
           });
-        });
-      }, (err) => {
-        console.log(err);
+        }
+      }).catch((reason) => {
+        console.log(reason);
       });
     });
 

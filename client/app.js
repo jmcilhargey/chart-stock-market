@@ -39,12 +39,19 @@ var StockBox = React.createClass({
 
     socket.on("add_stock", (addedStock) => {
 
-      var copyState = this.state.data.slice();
-      copyState.push(addedStock);
+      if (addedStock.error) {
 
-      this.setState({
-        data: copyState
-      });
+      } else {
+        var copyState = this.state.data.slice();
+        copyState.push(addedStock);
+
+        this.setState({
+          data: copyState
+        });
+      }
+    });
+    socket.on("search_error", (errorMessage) => {
+      console.log(errorMessage);
     });
   },
   render: function() {
