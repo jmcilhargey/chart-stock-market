@@ -23,7 +23,7 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
   io.on("connection", (socket) => {
     console.log("User connected");
 
-    db.collection("stocks").find({}).limit(5).toArray((err, data) => {
+    db.collection("stocks").find({}).sort({ $natural: -1 }).limit(5).toArray((err, data) => {
       if (err) {
         console.log(err);
       }

@@ -4,14 +4,15 @@ import * as React from "react";
 import D3Graph from "./D3Graph"
 
 var StockGraph = React.createClass({
-  shouldComponentUpdate: function() {
-    return this.props.data.length
+
+  getStockState: function() {
+    return this.props.data;
   },
   componentWillUpdate: function() {
     D3Graph.clear();
   },
   componentDidUpdate: function() {
-    D3Graph.create(this.props.data);
+    D3Graph.create(this.getStockState());
   },
   render: function() {
     return (

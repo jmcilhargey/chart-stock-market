@@ -4,11 +4,18 @@ import * as React from "react";
 import StockBox from "./StockBox";
 
 var StockList = React.createClass({
+  onRemoveStock: function(index) {
+    this.props.onRemoveStock(index);
+  },
   render: function() {
 
-    var stockNodes = this.props.data.map((stock) => {
+    var stockNodes = this.props.data.map((stock, index) => {
       return (
-        <StockBox symbol={ stock.symbol } key= { stock._id } />
+        <StockBox
+        symbol={ stock.symbol }
+        key={ index }
+        index={ index }
+        onRemoveStock= { this.onRemoveStock } />
       );
     });
 

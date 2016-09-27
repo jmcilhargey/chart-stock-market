@@ -6,12 +6,14 @@ body {
   font-family: "Roboto", sans-serif;
   color: #424242;
   background: #f5f5f5;
+  font-weight: 300;
+  letter-spacing: 0.04em;
 }
 
 .container {
   margin: 0 auto;
   height: 100%;
-  width: 1000px;
+  width: 900px;
 }
 
 .stockApp {
@@ -24,18 +26,18 @@ body {
   -webkit-justify-content: center;
   align-items: center;
   -webkit-align-items: center;
-  flex-direction: column;
-  -webkit-flex-direction: column;
+  flex-direction: row;
+  -webkit-flex-direction: row;
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   overflow: hidden;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.20);
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .stockForm {
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
+  flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
   margin: 1em;
   display: flex;
   display: -webkit-flex;
@@ -45,23 +47,29 @@ body {
 
 .stockForm input[type=text] {
   color: #424242;
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
+  flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
   font-size: 1.5em;
+  font-weight: 300;
+  letter-spacing: 0.04em;
   padding: 0.5em 0.25em;
+  border-width: 1px;
+  border-radius: 4px 4px 0 0;
+  border-color: rgba(0, 0, 0, 0.4);
   outline: none;
 }
 
 .stockForm input[type=submit] {
   color: #424242;
   cursor: pointer;
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
+  flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
   font-size: 1.25em;
+  font-weight: 300;
   padding: 0.75em;
   background: #fff;
   border-radius: 0 0 4px 4px;
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(0, 0, 0, 0.4);
   border-top: none;
   outline: none;
 }
@@ -74,51 +82,30 @@ body {
 }
 
 .stockBox {
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
+  flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
   margin: 1em;
   width: 5em;
   height: 5em;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.20);
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .stockBox > p {
-  margin: 0;
+  margin: 0 ;
   text-align: center;
-  line-height: 5em;
+  line-height: 2.5em;
+}
+
+.stockBox > span {
+  cursor: pointer;
+  top: 0.1em;
+  left: 4em;
+  position: relative;
+
 }
 
 .stockGraph {
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
-}
-
-#header {
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
-  align-self: stretch;
-  -webkit-align-self: stretch;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-  text-align: center;
-}
-
-#graph {
-  margin: 2em;
-  padding: 2em;
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.20);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-}
-
-#stock-text {
-  margin: 2em;
-  padding: 1em;
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.20);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }

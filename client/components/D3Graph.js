@@ -15,13 +15,11 @@ D3Graph.clear = function() {
 
 D3Graph.create = function(data) {
 
-  console.log(data);
-
   var parseTime = d3.timeParse("%Y-%m-%d");
   var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
   var margin = { top: 15, right: 15, bottom: 20, left: 30 };
-  var header = 100;
+  var header = 75;
 
   var canvas = document.getElementsByTagName("canvas")[0];
   var context = canvas.getContext("2d");
@@ -109,9 +107,9 @@ D3Graph.create = function(data) {
   function drawVerticalLine(location) {
 
     context.beginPath();
-    context.moveTo(location.xPos - margin.left, 0);
+    context.moveTo(location.xPos - margin.left, header);
     context.lineTo(location.xPos - margin.left, height);
-    context.strokeStyle = "#bdbdbd";
+    context.strokeStyle = "#757575";
     context.lineWidth = 1;
     context.setLineDash([2, 5]);
     context.stroke();

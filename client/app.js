@@ -17,12 +17,19 @@ socket.on("connect", () => {
 });
 
 socket.on("connect_error", (error) => {
-  console.log(error);
+    console.log(error);
 });
 
 var StockApp = React.createClass({
   handleStockSubmit: function(stockData) {
     socket.emit("request_stock", stockData);
+  },
+  handleRemoveStock: function(stockIndex) {
+
+    this.setState({
+      data: this.state.data.filter((stock, index) => index !== stockIndex)
+    });
+
   },
   getInitialState: function() {
     return {
@@ -42,11 +49,11 @@ var StockApp = React.createClass({
       if (addedStock.error) {
 
       } else {
-        var copyState = this.state.data.slice();
-        copyState.push(addedStock);
+        var newState = this.state.data.slice();
+        newState.push(addedStock);
 
         this.setState({
-          data: copyState
+          data: newState
         });
       }
     });
@@ -58,7 +65,7 @@ var StockApp = React.createClass({
     return (
       <div className="stockApp">
         <StockForm onStockSubmit={ this.handleStockSubmit }/>
-        <StockList data={ this.state.data }/>
+        <StockList onRemoveStock={ this.handleRemoveStock } data={ this.state.data }/>
         <StockGraph data={ this.state.data }/>
       </div>
     );

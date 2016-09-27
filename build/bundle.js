@@ -92,6 +92,14 @@
 	  handleStockSubmit: function handleStockSubmit(stockData) {
 	    socket.emit("request_stock", stockData);
 	  },
+	  handleRemoveStock: function handleRemoveStock(stockIndex) {
+
+	    this.setState({
+	      data: this.state.data.filter(function (stock, index) {
+	        return index !== stockIndex;
+	      })
+	    });
+	  },
 	  getInitialState: function getInitialState() {
 	    return {
 	      data: []
@@ -109,11 +117,11 @@
 	    socket.on("add_stock", function (addedStock) {
 
 	      if (addedStock.error) {} else {
-	        var copyState = _this.state.data.slice();
-	        copyState.push(addedStock);
+	        var newState = _this.state.data.slice();
+	        newState.push(addedStock);
 
 	        _this.setState({
-	          data: copyState
+	          data: newState
 	        });
 	      }
 	    });
@@ -126,7 +134,7 @@
 	      "div",
 	      { className: "stockApp" },
 	      React.createElement(_StockForm2.default, { onStockSubmit: this.handleStockSubmit }),
-	      React.createElement(_StockList2.default, { data: this.state.data }),
+	      React.createElement(_StockList2.default, { onRemoveStock: this.handleRemoveStock, data: this.state.data }),
 	      React.createElement(_StockGraph2.default, { data: this.state.data })
 	    );
 	  }
@@ -29009,7 +29017,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #f5f5f5;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 1000px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n}\n\n.stockForm {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  margin: 1em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  font-size: 1.5em;\n  padding: 0.5em 0.25em;\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  font-size: 1.25em;\n  padding: 0.75em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  margin: 1em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n}\n\n.stockBox > p {\n  margin: 0;\n  text-align: center;\n  line-height: 5em;\n}\n\n.stockGraph {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n}\n\n#header {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  align-self: stretch;\n  -webkit-align-self: stretch;\n  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);\n  text-align: center;\n}\n\n#graph {\n  margin: 2em;\n  padding: 2em;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);\n}\n\n#stock-text {\n  margin: 2em;\n  padding: 1em;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);\n}\n", ""]);
+	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #f5f5f5;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 900px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.4);\n}\n\n.stockForm {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 1em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.5em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.5em 0.25em;\n  border-width: 1px;\n  border-radius: 4px 4px 0 0;\n  border-color: rgba(0, 0, 0, 0.4);\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.25em;\n  font-weight: 300;\n  padding: 0.75em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.4);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 1em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.4);\n}\n\n.stockBox > p {\n  margin: 0 ;\n  text-align: center;\n  line-height: 2.5em;\n}\n\n.stockBox > span {\n  cursor: pointer;\n  top: 0.1em;\n  left: 4em;\n  position: relative;\n\n}\n\n.stockGraph {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n}\n", ""]);
 
 	// exports
 
@@ -29401,14 +29409,15 @@
 	var StockGraph = React.createClass({
 	  displayName: "StockGraph",
 
-	  shouldComponentUpdate: function shouldComponentUpdate() {
-	    return this.props.data.length;
+
+	  getStockState: function getStockState() {
+	    return this.props.data;
 	  },
 	  componentWillUpdate: function componentWillUpdate() {
 	    _D3Graph2.default.clear();
 	  },
 	  componentDidUpdate: function componentDidUpdate() {
-	    _D3Graph2.default.create(this.props.data);
+	    _D3Graph2.default.create(this.getStockState());
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -29450,13 +29459,11 @@
 
 	D3Graph.create = function (data) {
 
-	  console.log(data);
-
 	  var parseTime = d3.timeParse("%Y-%m-%d");
 	  var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
 	  var margin = { top: 15, right: 15, bottom: 20, left: 30 };
-	  var header = 100;
+	  var header = 75;
 
 	  var canvas = document.getElementsByTagName("canvas")[0];
 	  var context = canvas.getContext("2d");
@@ -29551,9 +29558,9 @@
 	  function drawVerticalLine(location) {
 
 	    context.beginPath();
-	    context.moveTo(location.xPos - margin.left, 0);
+	    context.moveTo(location.xPos - margin.left, header);
 	    context.lineTo(location.xPos - margin.left, height);
-	    context.strokeStyle = "#bdbdbd";
+	    context.strokeStyle = "#757575";
 	    context.lineWidth = 1;
 	    context.setLineDash([2, 5]);
 	    context.stroke();
@@ -45926,10 +45933,18 @@
 	var StockList = React.createClass({
 	  displayName: "StockList",
 
+	  onRemoveStock: function onRemoveStock(index) {
+	    this.props.onRemoveStock(index);
+	  },
 	  render: function render() {
+	    var _this = this;
 
-	    var stockNodes = this.props.data.map(function (stock) {
-	      return React.createElement(_StockBox2.default, { symbol: stock.symbol, key: stock._id });
+	    var stockNodes = this.props.data.map(function (stock, index) {
+	      return React.createElement(_StockBox2.default, {
+	        symbol: stock.symbol,
+	        key: index,
+	        index: index,
+	        onRemoveStock: _this.onRemoveStock });
 	    });
 
 	    return React.createElement(
@@ -45957,10 +45972,19 @@
 	var StockBox = React.createClass({
 	  displayName: "StockBox",
 
+
+	  handleClick: function handleClick() {
+	    this.props.onRemoveStock(this.props.index);
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      "div",
 	      { className: "stockBox" },
+	      React.createElement(
+	        "span",
+	        { onClick: this.handleClick, className: "closeBox" },
+	        "x"
+	      ),
 	      React.createElement(
 	        "p",
 	        null,
