@@ -15,11 +15,13 @@ D3Graph.clear = function() {
 
 D3Graph.create = function(data) {
 
+  console.log(data);
+
   var parseTime = d3.timeParse("%Y-%m-%d");
-  var formatPercent = d3.format(".2%");
   var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
   var margin = { top: 15, right: 15, bottom: 20, left: 30 };
+  var header = 100;
 
   var canvas = document.getElementsByTagName("canvas")[0];
   var context = canvas.getContext("2d");
@@ -28,21 +30,20 @@ D3Graph.create = function(data) {
   var height = canvas.height - margin.top - margin.bottom;
 
   var xScale = d3.scaleTime().range([0, width]);
-  var yScale = d3.scaleLinear().range([height, 0]);
+  var yScale = d3.scaleLinear().range([height, header]);
 
   context.translate(margin.left, margin.top);
 
   var flattenedArray = [].concat.apply([], data.map((d) => d.data));
 
   xScale.domain(d3.extent(flattenedArray, (d) => new Date(d.date)));
-  yScale.domain(d3.extent(flattenedArray, (d) => d.price ));
+  yScale.domain(d3.extent(flattenedArray, (d) => parseInt(d.percent)));
 
   var tickCount = 10;
   var tickSize = 5;
 
   drawXAxis();
   drawYAxis();
-
   drawStockData(data);
 
   canvas.addEventListener("mousemove", (e) => {
@@ -68,6 +69,10 @@ D3Graph.create = function(data) {
   var bisectDate = d3.bisector((d, x) => new Date(d.date) - x ).left;
   var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   var currencyFormat = d3.format(",.2f");
+  var percentFormat = d3.format(".2%");
+
+
+  context.textAlign = "start";
 
   function showStockPrice(location) {
 
@@ -77,16 +82,28 @@ D3Graph.create = function(data) {
     var stockDate = new Date(data[0].data[dateIndex].date);
     var dateMessage = `${ monthNames[stockDate.getMonth()] } ${ stockDate.getDate() }`;
 
-    context.font = "20pt Calibri";
-    context.textAlign="start";
-    context.fillText(dateMessage, margin.left, margin.top);
+    context.font = "24pt Calibri";
+    context.fillStyle = "#757575";
+    context.fillText(dateMessage, canvas.width - 175, canvas.height - 75);
 
-    var stockPrice = data[0].data[dateIndex].price;
-    var stockMessage = `$${ currencyFormat(stockPrice) }`
+    data.forEach((stock, index, array) => {
 
-    context.font = "20pt Calibri";
-    context.textAlign="start";
-    context.fillText(stockMessage, margin.left + 100, margin.top);
+      var startLeft = margin.left + (index % 3) * 250;
+      var startTop = margin.top + Math.floor(index / 3) * 40;
+
+      context.beginPath();
+      context.arc(startLeft - 10, startTop, 5, 2 * Math.PI, false);
+      context.font = "14pt Calibri";
+      context.fillStyle = colors(index);
+      context.fill();
+
+      var stockPrice = stock.data[dateIndex].price;
+      var stockPercent = stock.data[dateIndex].percent;
+
+      var stockMessage = `${ stock.symbol } $${ currencyFormat(stockPrice) } ${ stockPercent }%`;
+
+      context.fillText(stockMessage, startLeft, startTop);
+    });
   }
 
   function drawVerticalLine(location) {
@@ -106,7 +123,7 @@ D3Graph.create = function(data) {
 
       var lineData = d3.line()
         .x((d) => xScale(new Date(d.date)))
-        .y((d) => yScale(d.price))
+        .y((d) => yScale(d.percent))
         .context(context);
 
       context.beginPath();

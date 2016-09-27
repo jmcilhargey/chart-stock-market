@@ -20,7 +20,7 @@ socket.on("connect_error", (error) => {
   console.log(error);
 });
 
-var StockBox = React.createClass({
+var StockApp = React.createClass({
   handleStockSubmit: function(stockData) {
     socket.emit("request_stock", stockData);
   },
@@ -56,9 +56,9 @@ var StockBox = React.createClass({
   },
   render: function() {
     return (
-      <div className="stockBox">
+      <div className="stockApp">
         <StockForm onStockSubmit={ this.handleStockSubmit }/>
-        <StockList />
+        <StockList data={ this.state.data }/>
         <StockGraph data={ this.state.data }/>
       </div>
     );
@@ -66,6 +66,6 @@ var StockBox = React.createClass({
 });
 
 ReactDOM.render(
-  <StockBox />,
-  document.getElementById("stockApp")
+  <StockApp />,
+  document.getElementById("app")
 );

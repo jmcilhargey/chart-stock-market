@@ -16,7 +16,7 @@ var StockGraph = React.createClass({
   render: function() {
     return (
       <div className="stockGraph">
-        <canvas width="800" height="400"></canvas>
+        <canvas width="800" height="500"></canvas>
       </div>
     );
   }

@@ -10,5 +10,5 @@ module.exports = function(jsonData) {
       price: day[4],
       percent: (((day[4] - initialPrice) / initialPrice) * 100).toFixed(2)
     };
-  }).sort((a, b) => a.date - b.date);
+  }).sort((a, b) => a.date - b.date );
 };

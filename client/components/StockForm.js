@@ -28,7 +28,6 @@ var StockForm = React.createClass({
       <form className="stockForm" onSubmit={ this.handleSubmit }>
         <input
           type="text"
-          placeholder="Enter stock symbol"
           value={ this.state.stockSymbol }
           onChange={ this.handleStockChange }/>
         <input type="submit" value="Get Stock"/>

@@ -11,10 +11,10 @@ body {
 .container {
   margin: 0 auto;
   height: 100%;
-  width: 52em;
+  width: 1000px;
 }
 
-.stockBox {
+.stockApp {
   margin: 5em 0;
   padding: 1em;
   background: #fff;
@@ -22,20 +22,21 @@ body {
   display: -webkit-flex;
   justify-content: center;
   -webkit-justify-content: center;
-  align-items: flex-start;
-  -webkit-align-items: flex-start;
+  align-items: center;
+  -webkit-align-items: center;
   flex-direction: column;
   -webkit-flex-direction: column;
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   overflow: hidden;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.20);
 }
 
 .stockForm {
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
+  margin: 1em;
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
@@ -57,10 +58,40 @@ body {
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
   font-size: 1.25em;
-  padding: 0.5em 0;
+  padding: 0.75em;
   background: #fff;
+  border-radius: 0 0 4px 4px;
   border: 1px solid rgba(0, 0, 0, 0.25);
+  border-top: none;
   outline: none;
+}
+
+.stockList {
+  flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  display: flex;
+  display: -webkit-flex;
+}
+
+.stockBox {
+  flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  margin: 1em;
+  width: 5em;
+  height: 5em;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.20);
+}
+
+.stockBox > p {
+  margin: 0;
+  text-align: center;
+  line-height: 5em;
+}
+
+.stockGraph {
+  flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
 }
 
 #header {
@@ -77,7 +108,7 @@ body {
   padding: 2em;
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.20);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
@@ -87,7 +118,7 @@ body {
   padding: 1em;
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.20);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }

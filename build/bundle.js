@@ -86,8 +86,8 @@
 	  console.log(error);
 	});
 
-	var StockBox = React.createClass({
-	  displayName: "StockBox",
+	var StockApp = React.createClass({
+	  displayName: "StockApp",
 
 	  handleStockSubmit: function handleStockSubmit(stockData) {
 	    socket.emit("request_stock", stockData);
@@ -124,15 +124,15 @@
 	  render: function render() {
 	    return React.createElement(
 	      "div",
-	      { className: "stockBox" },
+	      { className: "stockApp" },
 	      React.createElement(_StockForm2.default, { onStockSubmit: this.handleStockSubmit }),
-	      React.createElement(_StockList2.default, null),
+	      React.createElement(_StockList2.default, { data: this.state.data }),
 	      React.createElement(_StockGraph2.default, { data: this.state.data })
 	    );
 	  }
 	});
 
-	ReactDOM.render(React.createElement(StockBox, null), document.getElementById("stockApp"));
+	ReactDOM.render(React.createElement(StockApp, null), document.getElementById("app"));
 
 /***/ },
 /* 1 */
@@ -29009,7 +29009,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #f5f5f5;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 52em;\n}\n\n.stockBox {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: flex-start;\n  -webkit-align-items: flex-start;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 2px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n}\n\n.stockForm {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  font-size: 1.5em;\n  padding: 0.5em 0.25em;\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  font-size: 1.25em;\n  padding: 0.5em 0;\n  background: #fff;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n  outline: none;\n}\n\n#header {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  align-self: stretch;\n  -webkit-align-self: stretch;\n  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);\n  text-align: center;\n}\n\n#graph {\n  margin: 2em;\n  padding: 2em;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  border-radius: 2px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);\n}\n\n#stock-text {\n  margin: 2em;\n  padding: 1em;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  border-radius: 2px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);\n}\n", ""]);
+	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #f5f5f5;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 1000px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n}\n\n.stockForm {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  margin: 1em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  font-size: 1.5em;\n  padding: 0.5em 0.25em;\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  font-size: 1.25em;\n  padding: 0.75em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  margin: 1em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n}\n\n.stockBox > p {\n  margin: 0;\n  text-align: center;\n  line-height: 5em;\n}\n\n.stockGraph {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n}\n\n#header {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  align-self: stretch;\n  -webkit-align-self: stretch;\n  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);\n  text-align: center;\n}\n\n#graph {\n  margin: 2em;\n  padding: 2em;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);\n}\n\n#stock-text {\n  margin: 2em;\n  padding: 1em;\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.20);\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);\n}\n", ""]);
 
 	// exports
 
@@ -29367,7 +29367,6 @@
 	      { className: "stockForm", onSubmit: this.handleSubmit },
 	      React.createElement("input", {
 	        type: "text",
-	        placeholder: "Enter stock symbol",
 	        value: this.state.stockSymbol,
 	        onChange: this.handleStockChange }),
 	      React.createElement("input", { type: "submit", value: "Get Stock" })
@@ -29415,7 +29414,7 @@
 	    return React.createElement(
 	      "div",
 	      { className: "stockGraph" },
-	      React.createElement("canvas", { width: "800", height: "400" })
+	      React.createElement("canvas", { width: "800", height: "500" })
 	    );
 	  }
 	});
@@ -29451,11 +29450,13 @@
 
 	D3Graph.create = function (data) {
 
+	  console.log(data);
+
 	  var parseTime = d3.timeParse("%Y-%m-%d");
-	  var formatPercent = d3.format(".2%");
 	  var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
 	  var margin = { top: 15, right: 15, bottom: 20, left: 30 };
+	  var header = 100;
 
 	  var canvas = document.getElementsByTagName("canvas")[0];
 	  var context = canvas.getContext("2d");
@@ -29464,7 +29465,7 @@
 	  var height = canvas.height - margin.top - margin.bottom;
 
 	  var xScale = d3.scaleTime().range([0, width]);
-	  var yScale = d3.scaleLinear().range([height, 0]);
+	  var yScale = d3.scaleLinear().range([height, header]);
 
 	  context.translate(margin.left, margin.top);
 
@@ -29476,7 +29477,7 @@
 	    return new Date(d.date);
 	  }));
 	  yScale.domain(d3.extent(flattenedArray, function (d) {
-	    return d.price;
+	    return parseInt(d.percent);
 	  }));
 
 	  var tickCount = 10;
@@ -29484,7 +29485,6 @@
 
 	  drawXAxis();
 	  drawYAxis();
-
 	  drawStockData(data);
 
 	  canvas.addEventListener("mousemove", function (e) {
@@ -29512,6 +29512,9 @@
 	  }).left;
 	  var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	  var currencyFormat = d3.format(",.2f");
+	  var percentFormat = d3.format(".2%");
+
+	  context.textAlign = "start";
 
 	  function showStockPrice(location) {
 
@@ -29521,16 +29524,28 @@
 	    var stockDate = new Date(data[0].data[dateIndex].date);
 	    var dateMessage = monthNames[stockDate.getMonth()] + " " + stockDate.getDate();
 
-	    context.font = "20pt Calibri";
-	    context.textAlign = "start";
-	    context.fillText(dateMessage, margin.left, margin.top);
+	    context.font = "24pt Calibri";
+	    context.fillStyle = "#757575";
+	    context.fillText(dateMessage, canvas.width - 175, canvas.height - 75);
 
-	    var stockPrice = data[0].data[dateIndex].price;
-	    var stockMessage = "$" + currencyFormat(stockPrice);
+	    data.forEach(function (stock, index, array) {
 
-	    context.font = "20pt Calibri";
-	    context.textAlign = "start";
-	    context.fillText(stockMessage, margin.left + 100, margin.top);
+	      var startLeft = margin.left + index % 3 * 250;
+	      var startTop = margin.top + Math.floor(index / 3) * 40;
+
+	      context.beginPath();
+	      context.arc(startLeft - 10, startTop, 5, 2 * Math.PI, false);
+	      context.font = "14pt Calibri";
+	      context.fillStyle = colors(index);
+	      context.fill();
+
+	      var stockPrice = stock.data[dateIndex].price;
+	      var stockPercent = stock.data[dateIndex].percent;
+
+	      var stockMessage = stock.symbol + " $" + currencyFormat(stockPrice) + " " + stockPercent + "%";
+
+	      context.fillText(stockMessage, startLeft, startTop);
+	    });
 	  }
 
 	  function drawVerticalLine(location) {
@@ -29551,7 +29566,7 @@
 	      var lineData = d3.line().x(function (d) {
 	        return xScale(new Date(d.date));
 	      }).y(function (d) {
-	        return yScale(d.price);
+	        return yScale(d.percent);
 	      }).context(context);
 
 	      context.beginPath();
@@ -45900,17 +45915,62 @@
 
 	var React = _interopRequireWildcard(_react);
 
+	var _StockBox = __webpack_require__(231);
+
+	var _StockBox2 = _interopRequireDefault(_StockBox);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	var StockList = React.createClass({
 	  displayName: "StockList",
 
 	  render: function render() {
-	    return React.createElement("div", { className: "stockData" });
+
+	    var stockNodes = this.props.data.map(function (stock) {
+	      return React.createElement(_StockBox2.default, { symbol: stock.symbol, key: stock._id });
+	    });
+
+	    return React.createElement(
+	      "div",
+	      { className: "stockList" },
+	      stockNodes
+	    );
 	  }
 	});
 
 	exports.default = StockList;
+
+/***/ },
+/* 231 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var StockBox = React.createClass({
+	  displayName: "StockBox",
+
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "stockBox" },
+	      React.createElement(
+	        "p",
+	        null,
+	        this.props.symbol
+	      )
+	    );
+	  }
+	});
+
+	module.exports = StockBox;
 
 /***/ }
 /******/ ]);
