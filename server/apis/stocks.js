@@ -17,10 +17,11 @@ module.exports = {
 
       var dateObj = new Date();
       var currDate = `${ dateObj.getFullYear() }-${ dateObj.getMonth() + 1 }-${ dateObj.getDate() }`;
+      var yearBefore = `${ dateObj.getFullYear() - 1 }-${ dateObj.getMonth() + 1 }-${ dateObj.getDate() }`;
 
       var httpsOpts = {
         "api_key": process.env.QUANDL_KEY,
-        "start_date": "2016-01-01",
+        "start_date": yearBefore,
         "end_date": currDate,
       };
 

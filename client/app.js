@@ -9,6 +9,7 @@ import "style!./main.css";
 import StockForm from "./components/StockForm";
 import StockGraph from "./components/StockGraph";
 import StockList from "./components/StockList";
+import GraphButtons from "./components/GraphButtons";
 
 var socket = io.connect("http://localhost:3000", { reconnection: false });
 
@@ -21,15 +22,19 @@ socket.on("connect_error", (error) => {
 });
 
 var StockApp = React.createClass({
+
   handleStockSubmit: function(stockData) {
-    socket.emit("request_stock", stockData);
+
+    if (this.state.data.length <= 5) {
+      socket.emit("request_stock", stockData);
+    }
   },
   handleRemoveStock: function(stockIndex) {
+    socket.emit("delete_stock", this.state.data[stockIndex]._id);
 
     this.setState({
       data: this.state.data.filter((stock, index) => index !== stockIndex)
     });
-
   },
   getInitialState: function() {
     return {
@@ -38,7 +43,7 @@ var StockApp = React.createClass({
   },
   componentDidMount: function() {
 
-    socket.on("initial_stocks", (stockList) => {
+    socket.on("get_stocks", (stockList) => {
       this.setState({
         data: stockList
       });
@@ -66,6 +71,7 @@ var StockApp = React.createClass({
       <div className="stockApp">
         <StockForm onStockSubmit={ this.handleStockSubmit }/>
         <StockList onRemoveStock={ this.handleRemoveStock } data={ this.state.data }/>
+        <GraphButtons />
         <StockGraph data={ this.state.data }/>
       </div>
     );

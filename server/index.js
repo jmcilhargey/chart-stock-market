@@ -4,6 +4,7 @@ require("./env");
 
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectID;
 const https = require("https");
 
 const app = require("express")();
@@ -23,11 +24,11 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
   io.on("connection", (socket) => {
     console.log("User connected");
 
-    db.collection("stocks").find({}).sort({ $natural: -1 }).limit(5).toArray((err, data) => {
+    db.collection("stocks").find({}).sort({ $natural: -1 }).limit(6).toArray((err, data) => {
       if (err) {
         console.log(err);
       }
-      socket.emit("initial_stocks", data);
+      socket.emit("get_stocks", data);
     });
 
     socket.on("request_stock", (data) => {
@@ -59,8 +60,22 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
       });
     });
 
-    socket.on("delete_quote", (data) => {
-      console.log(data);
+    socket.on("delete_stock", (id) => {
+
+      db.collection("stocks").deleteOne({ "_id": ObjectId(id) }, {
+        "w": 1,
+        "wtimeout": 5000
+      }, (err, res) => {
+        if (err) {
+          console.log(err);
+        }
+        db.collection("stocks").find({}).sort({ $natural: -1 }).limit(6).toArray((err, data) => {
+          if (err) {
+            console.log(err);
+          }
+          socket.emit("get_stocks", data);
+        });
+      });
     });
 
     socket.on("change_dates", (data) => {

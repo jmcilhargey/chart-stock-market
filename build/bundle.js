@@ -72,6 +72,10 @@
 
 	var _StockList2 = _interopRequireDefault(_StockList);
 
+	var _GraphButtons = __webpack_require__(232);
+
+	var _GraphButtons2 = _interopRequireDefault(_GraphButtons);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -89,10 +93,15 @@
 	var StockApp = React.createClass({
 	  displayName: "StockApp",
 
+
 	  handleStockSubmit: function handleStockSubmit(stockData) {
-	    socket.emit("request_stock", stockData);
+
+	    if (this.state.data.length <= 5) {
+	      socket.emit("request_stock", stockData);
+	    }
 	  },
 	  handleRemoveStock: function handleRemoveStock(stockIndex) {
+	    socket.emit("delete_stock", this.state.data[stockIndex]._id);
 
 	    this.setState({
 	      data: this.state.data.filter(function (stock, index) {
@@ -108,7 +117,7 @@
 	  componentDidMount: function componentDidMount() {
 	    var _this = this;
 
-	    socket.on("initial_stocks", function (stockList) {
+	    socket.on("get_stocks", function (stockList) {
 	      _this.setState({
 	        data: stockList
 	      });
@@ -135,6 +144,7 @@
 	      { className: "stockApp" },
 	      React.createElement(_StockForm2.default, { onStockSubmit: this.handleStockSubmit }),
 	      React.createElement(_StockList2.default, { onRemoveStock: this.handleRemoveStock, data: this.state.data }),
+	      React.createElement(_GraphButtons2.default, null),
 	      React.createElement(_StockGraph2.default, { data: this.state.data })
 	    );
 	  }
@@ -29017,7 +29027,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #f5f5f5;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 900px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.4);\n}\n\n.stockForm {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 1em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.5em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.5em 0.25em;\n  border-width: 1px;\n  border-radius: 4px 4px 0 0;\n  border-color: rgba(0, 0, 0, 0.4);\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.25em;\n  font-weight: 300;\n  padding: 0.75em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.4);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 1em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.4);\n}\n\n.stockBox > p {\n  margin: 0 ;\n  text-align: center;\n  line-height: 2.5em;\n}\n\n.stockBox > span {\n  cursor: pointer;\n  top: 0.1em;\n  left: 4em;\n  position: relative;\n\n}\n\n.stockGraph {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n}\n", ""]);
+	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #eeeeee;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 900px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockForm {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.5em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.15em;\n  border-width: 1px;\n  border-radius: 4px 4px 0 0;\n  border-color: rgba(0, 0, 0, 0.5);\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.25em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.5em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockBox > p {\n  margin: 0 ;\n  text-align: center;\n  line-height: 2.5em;\n}\n\n.stockBox > span {\n  cursor: pointer;\n  top: 0.1em;\n  left: 4em;\n  position: relative;\n\n}\n\n.stockGraph {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n}\n\n.graphButtons {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  -webkit-align-self: flex-start;\n  align-self: flex-start;\n  margin: 0.25em;\n  width: 3em;\n  height: 3em;\n  background: none;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n  cursor: pointer;\n  outline: none;\n}\n", ""]);
 
 	// exports
 
@@ -29462,7 +29472,7 @@
 	  var parseTime = d3.timeParse("%Y-%m-%d");
 	  var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
-	  var margin = { top: 15, right: 15, bottom: 20, left: 30 };
+	  var margin = { top: 15, right: 15, bottom: 20, left: 35 };
 	  var header = 75;
 
 	  var canvas = document.getElementsByTagName("canvas")[0];
@@ -29500,9 +29510,12 @@
 	    if (location.xPos > margin.left && location.xPos < width + margin.left) {
 
 	      context.clearRect(0, 0, canvas.width, canvas.height - margin.bottom - margin.top);
-	      drawStockData(data);
-	      drawVerticalLine(location);
-	      showStockPrice(location);
+
+	      if (data.length) {
+	        drawStockData(data);
+	        drawVerticalLine(location);
+	        showStockPrice(location);
+	      }
 	    }
 	  });
 
@@ -29545,6 +29558,7 @@
 	      context.font = "14pt Calibri";
 	      context.fillStyle = colors(index);
 	      context.fill();
+	      context.closePath();
 
 	      var stockPrice = stock.data[dateIndex].price;
 	      var stockPercent = stock.data[dateIndex].percent;
@@ -29564,6 +29578,7 @@
 	    context.lineWidth = 1;
 	    context.setLineDash([2, 5]);
 	    context.stroke();
+	    context.closePath();
 	  }
 
 	  function drawStockData(data) {
@@ -29575,13 +29590,13 @@
 	      }).y(function (d) {
 	        return yScale(d.percent);
 	      }).context(context);
-
 	      context.beginPath();
 	      lineData(stock.data);
 	      context.strokeStyle = colors(index);
 	      context.lineWidth = 2;
 	      context.setLineDash([]);
 	      context.stroke();
+	      context.closePath();
 	    });
 	  }
 
@@ -29597,6 +29612,7 @@
 	    context.font = "10pt Calibri";
 	    context.strokeStyle = "#616161";
 	    context.stroke();
+	    context.closePath();
 
 	    context.textAlign = "center";
 	    context.textBaseline = "top";
@@ -29619,6 +29635,7 @@
 	    context.font = "10pt Calibri";
 	    context.strokeStyle = "#616161";
 	    context.stroke();
+	    context.closePath();
 
 	    context.textAlign = "right";
 	    context.textBaseline = "middle";
@@ -45995,6 +46012,43 @@
 	});
 
 	module.exports = StockBox;
+
+/***/ },
+/* 232 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var GraphButtons = React.createClass({
+	  displayName: "GraphButtons",
+
+
+	  render: function render() {
+	    var buttonText = ["1d", "5d", "1m", "3m", "1yr"];
+
+	    var buttonNodes = buttonText.map(function (currText) {
+	      return React.createElement(
+	        "button",
+	        { className: "graphButtons", type: "button" },
+	        currText
+	      );
+	    });
+
+	    return React.createElement(
+	      "div",
+	      null,
+	      buttonNodes
+	    );
+	  }
+	});
+
+	module.exports = GraphButtons;
 
 /***/ }
 /******/ ]);

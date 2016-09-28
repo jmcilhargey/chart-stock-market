@@ -18,7 +18,7 @@ D3Graph.create = function(data) {
   var parseTime = d3.timeParse("%Y-%m-%d");
   var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
-  var margin = { top: 15, right: 15, bottom: 20, left: 30 };
+  var margin = { top: 15, right: 15, bottom: 20, left: 35 };
   var header = 75;
 
   var canvas = document.getElementsByTagName("canvas")[0];
@@ -50,9 +50,12 @@ D3Graph.create = function(data) {
     if (location.xPos > margin.left && location.xPos < width + margin.left) {
 
       context.clearRect(0, 0, canvas.width, canvas.height - margin.bottom - margin.top);
-      drawStockData(data);
-      drawVerticalLine(location);
-      showStockPrice(location);
+
+      if (data.length) {
+        drawStockData(data);
+        drawVerticalLine(location);
+        showStockPrice(location);
+      }
     }
   });
 
@@ -94,6 +97,7 @@ D3Graph.create = function(data) {
       context.font = "14pt Calibri";
       context.fillStyle = colors(index);
       context.fill();
+      context.closePath();
 
       var stockPrice = stock.data[dateIndex].price;
       var stockPercent = stock.data[dateIndex].percent;
@@ -113,9 +117,12 @@ D3Graph.create = function(data) {
     context.lineWidth = 1;
     context.setLineDash([2, 5]);
     context.stroke();
+    context.closePath();
   }
 
   function drawStockData(data) {
+
+
 
     data.forEach((stock, index) => {
 
@@ -123,13 +130,13 @@ D3Graph.create = function(data) {
         .x((d) => xScale(new Date(d.date)))
         .y((d) => yScale(d.percent))
         .context(context);
-
       context.beginPath();
       lineData(stock.data);
       context.strokeStyle = colors(index);
       context.lineWidth = 2;
       context.setLineDash([]);
       context.stroke();
+      context.closePath();
     });
   }
 
@@ -145,6 +152,7 @@ D3Graph.create = function(data) {
     context.font = "10pt Calibri";
     context.strokeStyle = "#616161";
     context.stroke();
+    context.closePath();
 
     context.textAlign = "center";
     context.textBaseline = "top";
@@ -167,6 +175,7 @@ D3Graph.create = function(data) {
     context.font = "10pt Calibri";
     context.strokeStyle = "#616161";
     context.stroke();
+    context.closePath();
 
     context.textAlign = "right";
     context.textBaseline = "middle";

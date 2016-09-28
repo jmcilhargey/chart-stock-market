@@ -5,7 +5,7 @@
 body {
   font-family: "Roboto", sans-serif;
   color: #424242;
-  background: #f5f5f5;
+  background: #eeeeee;
   font-weight: 300;
   letter-spacing: 0.04em;
 }
@@ -32,13 +32,13 @@ body {
   -webkit-flex-wrap: wrap;
   overflow: hidden;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .stockForm {
   flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
-  margin: 1em;
+  margin: 0.5em;
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
@@ -52,10 +52,10 @@ body {
   font-size: 1.5em;
   font-weight: 300;
   letter-spacing: 0.04em;
-  padding: 0.5em 0.25em;
+  padding: 0.15em;
   border-width: 1px;
   border-radius: 4px 4px 0 0;
-  border-color: rgba(0, 0, 0, 0.4);
+  border-color: rgba(0, 0, 0, 0.5);
   outline: none;
 }
 
@@ -66,10 +66,11 @@ body {
   -webkit-flex: 0 1 auto;
   font-size: 1.25em;
   font-weight: 300;
-  padding: 0.75em;
+  letter-spacing: 0.04em;
+  padding: 0.5em;
   background: #fff;
   border-radius: 0 0 4px 4px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.5);
   border-top: none;
   outline: none;
 }
@@ -84,11 +85,11 @@ body {
 .stockBox {
   flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
-  margin: 1em;
+  margin: 0.5em;
   width: 5em;
   height: 5em;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .stockBox > p {
@@ -106,6 +107,21 @@ body {
 }
 
 .stockGraph {
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
+  flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+}
+
+.graphButtons {
+  flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+  -webkit-align-self: flex-start;
+  align-self: flex-start;
+  margin: 0.25em;
+  width: 3em;
+  height: 3em;
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
 }
