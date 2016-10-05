@@ -15,7 +15,8 @@
     "express": "^4.13.4",
     "mongodb": "^2.2.10",
     "mongoose": "^4.4.12",
-    "react": "^15.3.1",
+    "react": "^15.3.2",
+    "react-addons-update": "^15.3.2",
     "react-dom": "^15.3.1",
     "socket.io": "^1.4.5"
   },

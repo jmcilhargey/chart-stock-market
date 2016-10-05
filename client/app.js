@@ -9,7 +9,7 @@ import "style!./main.css";
 import StockForm from "./components/StockForm";
 import StockGraph from "./components/StockGraph";
 import StockList from "./components/StockList";
-import GraphButtons from "./components/GraphButtons";
+import StockButtons from "./components/StockButtons";
 
 var socket = io.connect("http://localhost:3000", { reconnection: false });
 
@@ -36,9 +36,15 @@ var StockApp = React.createClass({
       data: this.state.data.filter((stock, index) => index !== stockIndex)
     });
   },
+  handleTimeChange: function(newTime) {
+    this.setState({
+      time: newTime
+    });
+  },
   getInitialState: function() {
     return {
-      data: []
+      data: [],
+      time: { days: 0, months: 0, years: 1 }
     };
   },
   componentDidMount: function() {
@@ -71,8 +77,8 @@ var StockApp = React.createClass({
       <div className="stockApp">
         <StockForm onStockSubmit={ this.handleStockSubmit }/>
         <StockList onRemoveStock={ this.handleRemoveStock } data={ this.state.data }/>
-        <GraphButtons />
-        <StockGraph data={ this.state.data }/>
+        <StockButtons onTimeChange= { this.handleTimeChange } />
+        <StockGraph data={ this.state.data } time={ this.state.time }/>
       </div>
     );
   }

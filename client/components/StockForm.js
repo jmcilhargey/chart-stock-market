@@ -13,12 +13,15 @@ var StockForm = React.createClass({
       stockSymbol: e.target.value
     });
   },
+  isValidSubmit: function(entry) {
+    return /^[a-zA-Z-.]{1,5}$/.test(entry);
+  },
   handleSubmit: function(e) {
     e.preventDefault();
 
     var stockSymbol = this.state.stockSymbol.trim();
 
-    if (stockSymbol.length) {
+    if (this.isValidSubmit(stockSymbol)) {
       this.props.onStockSubmit({ stockSymbol: stockSymbol });
       this.setState({ stockSymbol: "" });
     }

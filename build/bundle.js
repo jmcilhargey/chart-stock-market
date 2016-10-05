@@ -72,9 +72,9 @@
 
 	var _StockList2 = _interopRequireDefault(_StockList);
 
-	var _GraphButtons = __webpack_require__(232);
+	var _StockButtons = __webpack_require__(232);
 
-	var _GraphButtons2 = _interopRequireDefault(_GraphButtons);
+	var _StockButtons2 = _interopRequireDefault(_StockButtons);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -109,9 +109,15 @@
 	      })
 	    });
 	  },
+	  handleTimeChange: function handleTimeChange(newTime) {
+	    this.setState({
+	      time: newTime
+	    });
+	  },
 	  getInitialState: function getInitialState() {
 	    return {
-	      data: []
+	      data: [],
+	      time: { days: 0, months: 0, years: 1 }
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -144,8 +150,8 @@
 	      { className: "stockApp" },
 	      React.createElement(_StockForm2.default, { onStockSubmit: this.handleStockSubmit }),
 	      React.createElement(_StockList2.default, { onRemoveStock: this.handleRemoveStock, data: this.state.data }),
-	      React.createElement(_GraphButtons2.default, null),
-	      React.createElement(_StockGraph2.default, { data: this.state.data })
+	      React.createElement(_StockButtons2.default, { onTimeChange: this.handleTimeChange }),
+	      React.createElement(_StockGraph2.default, { data: this.state.data, time: this.state.time })
 	    );
 	  }
 	});
@@ -1149,14 +1155,6 @@
 	  var source = null;
 
 	  if (config != null) {
-	    if (process.env.NODE_ENV !== 'production') {
-	      process.env.NODE_ENV !== 'production' ? warning(
-	      /* eslint-disable no-proto */
-	      config.__proto__ == null || config.__proto__ === Object.prototype,
-	      /* eslint-enable no-proto */
-	      'React.createElement(...): Expected props argument to be a plain object. ' + 'Properties defined in its prototype chain will be ignored.') : void 0;
-	    }
-
 	    if (hasValidRef(config)) {
 	      ref = config.ref;
 	    }
@@ -1257,14 +1255,6 @@
 	  var owner = element._owner;
 
 	  if (config != null) {
-	    if (process.env.NODE_ENV !== 'production') {
-	      process.env.NODE_ENV !== 'production' ? warning(
-	      /* eslint-disable no-proto */
-	      config.__proto__ == null || config.__proto__ === Object.prototype,
-	      /* eslint-enable no-proto */
-	      'React.cloneElement(...): Expected props argument to be a plain object. ' + 'Properties defined in its prototype chain will be ignored.') : void 0;
-	    }
-
 	    if (hasValidRef(config)) {
 	      // Silently steal the ref from the parent.
 	      ref = config.ref;
@@ -4298,7 +4288,7 @@
 
 	'use strict';
 
-	module.exports = '15.3.1';
+	module.exports = '15.3.2';
 
 /***/ },
 /* 33 */
@@ -5280,8 +5270,10 @@
 	function getFallbackBeforeInputChars(topLevelType, nativeEvent) {
 	  // If we are currently composing (IME) and using a fallback to do so,
 	  // try to extract the composed characters from the fallback object.
+	  // If composition event is available, we extract a string only at
+	  // compositionevent, otherwise extract it at fallback events.
 	  if (currentComposition) {
-	    if (topLevelType === topLevelTypes.topCompositionEnd || isFallbackCompositionEnd(topLevelType, nativeEvent)) {
+	    if (topLevelType === topLevelTypes.topCompositionEnd || !canUseCompositionEvent && isFallbackCompositionEnd(topLevelType, nativeEvent)) {
 	      var chars = currentComposition.getData();
 	      FallbackCompositionState.release(currentComposition);
 	      currentComposition = null;
@@ -6890,7 +6882,8 @@
 
 	    if (event.preventDefault) {
 	      event.preventDefault();
-	    } else {
+	    } else if (typeof event.returnValue !== 'unknown') {
+	      // eslint-disable-line valid-typeof
 	      event.returnValue = false;
 	    }
 	    this.isDefaultPrevented = emptyFunction.thatReturnsTrue;
@@ -7147,7 +7140,7 @@
 	var doesChangeEventBubble = false;
 	if (ExecutionEnvironment.canUseDOM) {
 	  // See `handleChange` comment below
-	  doesChangeEventBubble = isEventSupported('change') && (!('documentMode' in document) || document.documentMode > 8);
+	  doesChangeEventBubble = isEventSupported('change') && (!document.documentMode || document.documentMode > 8);
 	}
 
 	function manualDispatchChangeEvent(nativeEvent) {
@@ -7213,7 +7206,7 @@
 	  // deleting text, so we ignore its input events.
 	  // IE10+ fire input events to often, such when a placeholder
 	  // changes or when an input with a placeholder is focused.
-	  isInputEventSupported = isEventSupported('input') && (!('documentMode' in document) || document.documentMode > 11);
+	  isInputEventSupported = isEventSupported('input') && (!document.documentMode || document.documentMode > 11);
 	}
 
 	/**
@@ -8442,12 +8435,6 @@
 	    endLifeCycleTimer(debugID, timerType);
 	    emitEvent('onEndLifeCycleTimer', debugID, timerType);
 	  },
-	  onError: function (debugID) {
-	    if (currentTimerDebugID != null) {
-	      endLifeCycleTimer(currentTimerDebugID, currentTimerType);
-	    }
-	    emitEvent('onError', debugID);
-	  },
 	  onBeginProcessingChildContext: function () {
 	    emitEvent('onBeginProcessingChildContext');
 	  },
@@ -9521,6 +9508,8 @@
 	    allowFullScreen: HAS_BOOLEAN_VALUE,
 	    allowTransparency: 0,
 	    alt: 0,
+	    // specifies target context for links with `preload` type
+	    as: 0,
 	    async: HAS_BOOLEAN_VALUE,
 	    autoComplete: 0,
 	    // autoFocus is polyfilled/normalized by AutoFocusUtils
@@ -9601,6 +9590,7 @@
 	    optimum: 0,
 	    pattern: 0,
 	    placeholder: 0,
+	    playsInline: HAS_BOOLEAN_VALUE,
 	    poster: 0,
 	    preload: 0,
 	    profile: 0,
@@ -10123,9 +10113,9 @@
 	  if (node.namespaceURI === DOMNamespaces.svg && !('innerHTML' in node)) {
 	    reusableSVGContainer = reusableSVGContainer || document.createElement('div');
 	    reusableSVGContainer.innerHTML = '<svg>' + html + '</svg>';
-	    var newNodes = reusableSVGContainer.firstChild.childNodes;
-	    for (var i = 0; i < newNodes.length; i++) {
-	      node.appendChild(newNodes[i]);
+	    var svgNode = reusableSVGContainer.firstChild;
+	    while (svgNode.firstChild) {
+	      node.appendChild(svgNode.firstChild);
 	    }
 	  } else {
 	    node.innerHTML = html;
@@ -11053,9 +11043,9 @@
 	  ReactDOMOption.postMountWrapper(inst);
 	}
 
-	var setContentChildForInstrumentation = emptyFunction;
+	var setAndValidateContentChildDev = emptyFunction;
 	if (process.env.NODE_ENV !== 'production') {
-	  setContentChildForInstrumentation = function (content) {
+	  setAndValidateContentChildDev = function (content) {
 	    var hasExistingContent = this._contentDebugID != null;
 	    var debugID = this._debugID;
 	    // This ID represents the inlined child that has no backing instance:
@@ -11069,6 +11059,7 @@
 	      return;
 	    }
 
+	    validateDOMNesting(null, String(content), this, this._ancestorInfo);
 	    this._contentDebugID = contentDebugID;
 	    if (hasExistingContent) {
 	      ReactInstrumentation.debugTool.onBeforeUpdateComponent(contentDebugID, content);
@@ -11243,7 +11234,7 @@
 	  this._flags = 0;
 	  if (process.env.NODE_ENV !== 'production') {
 	    this._ancestorInfo = null;
-	    setContentChildForInstrumentation.call(this, null);
+	    setAndValidateContentChildDev.call(this, null);
 	  }
 	}
 
@@ -11343,7 +11334,7 @@
 	      if (parentInfo) {
 	        // parentInfo should always be present except for the top-level
 	        // component when server rendering
-	        validateDOMNesting(this._tag, this, parentInfo);
+	        validateDOMNesting(this._tag, null, this, parentInfo);
 	      }
 	      this._ancestorInfo = validateDOMNesting.updatedAncestorInfo(parentInfo, this._tag, this);
 	    }
@@ -11512,7 +11503,7 @@
 	        // TODO: Validate that text is allowed as a child of this node
 	        ret = escapeTextContentForBrowser(contentToUse);
 	        if (process.env.NODE_ENV !== 'production') {
-	          setContentChildForInstrumentation.call(this, contentToUse);
+	          setAndValidateContentChildDev.call(this, contentToUse);
 	        }
 	      } else if (childrenToUse != null) {
 	        var mountImages = this.mountChildren(childrenToUse, transaction, context);
@@ -11549,7 +11540,7 @@
 	      if (contentToUse != null) {
 	        // TODO: Validate that text is allowed as a child of this node
 	        if (process.env.NODE_ENV !== 'production') {
-	          setContentChildForInstrumentation.call(this, contentToUse);
+	          setAndValidateContentChildDev.call(this, contentToUse);
 	        }
 	        DOMLazyTree.queueText(lazyTree, contentToUse);
 	      } else if (childrenToUse != null) {
@@ -11781,7 +11772,7 @@
 	      if (lastContent !== nextContent) {
 	        this.updateTextContent('' + nextContent);
 	        if (process.env.NODE_ENV !== 'production') {
-	          setContentChildForInstrumentation.call(this, nextContent);
+	          setAndValidateContentChildDev.call(this, nextContent);
 	        }
 	      }
 	    } else if (nextHtml != null) {
@@ -11793,7 +11784,7 @@
 	      }
 	    } else if (nextChildren != null) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        setContentChildForInstrumentation.call(this, null);
+	        setAndValidateContentChildDev.call(this, null);
 	      }
 
 	      this.updateChildren(nextChildren, transaction, context);
@@ -11848,7 +11839,7 @@
 	    this._wrapperState = null;
 
 	    if (process.env.NODE_ENV !== 'production') {
-	      setContentChildForInstrumentation.call(this, null);
+	      setAndValidateContentChildDev.call(this, null);
 	    }
 	  },
 
@@ -13121,6 +13112,19 @@
 	  },
 
 	  /**
+	   * Protect against document.createEvent() returning null
+	   * Some popup blocker extensions appear to do this:
+	   * https://github.com/facebook/react/issues/6887
+	   */
+	  supportsEventPageXY: function () {
+	    if (!document.createEvent) {
+	      return false;
+	    }
+	    var ev = document.createEvent('MouseEvent');
+	    return ev != null && 'pageX' in ev;
+	  },
+
+	  /**
 	   * Listens to window scroll and resize events. We cache scroll values so that
 	   * application code can access them without triggering reflows.
 	   *
@@ -13133,7 +13137,7 @@
 	   */
 	  ensureScrollValueMonitoring: function () {
 	    if (hasEventPageXY === undefined) {
-	      hasEventPageXY = document.createEvent && 'pageX' in document.createEvent('MouseEvent');
+	      hasEventPageXY = ReactBrowserEventEmitter.supportsEventPageXY();
 	    }
 	    if (!hasEventPageXY && !isMonitoringScrollValue) {
 	      var refresh = ViewportMetrics.refreshScrollValues;
@@ -13419,7 +13423,7 @@
 
 	function isControlled(props) {
 	  var usesChecked = props.type === 'checkbox' || props.type === 'radio';
-	  return usesChecked ? props.checked !== undefined : props.value !== undefined;
+	  return usesChecked ? props.checked != null : props.value != null;
 	}
 
 	/**
@@ -15192,34 +15196,29 @@
 	  }
 	}
 
-	function invokeComponentDidMountWithTimer() {
-	  var publicInstance = this._instance;
-	  if (this._debugID !== 0) {
-	    ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentDidMount');
-	  }
-	  publicInstance.componentDidMount();
-	  if (this._debugID !== 0) {
-	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentDidMount');
-	  }
-	}
-
-	function invokeComponentDidUpdateWithTimer(prevProps, prevState, prevContext) {
-	  var publicInstance = this._instance;
-	  if (this._debugID !== 0) {
-	    ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentDidUpdate');
-	  }
-	  publicInstance.componentDidUpdate(prevProps, prevState, prevContext);
-	  if (this._debugID !== 0) {
-	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentDidUpdate');
-	  }
-	}
-
 	function shouldConstruct(Component) {
 	  return !!(Component.prototype && Component.prototype.isReactComponent);
 	}
 
 	function isPureComponent(Component) {
 	  return !!(Component.prototype && Component.prototype.isPureReactComponent);
+	}
+
+	// Separated into a function to contain deoptimizations caused by try/finally.
+	function measureLifeCyclePerf(fn, debugID, timerType) {
+	  if (debugID === 0) {
+	    // Top-level wrappers (see ReactMount) and empty components (see
+	    // ReactDOMEmptyComponent) are invisible to hooks and devtools.
+	    // Both are implementation details that should go away in the future.
+	    return fn();
+	  }
+
+	  ReactInstrumentation.debugTool.onBeginLifeCycleTimer(debugID, timerType);
+	  try {
+	    return fn();
+	  } finally {
+	    ReactInstrumentation.debugTool.onEndLifeCycleTimer(debugID, timerType);
+	  }
 	}
 
 	/**
@@ -15313,6 +15312,8 @@
 	   * @internal
 	   */
 	  mountComponent: function (transaction, hostParent, hostContainerInfo, context) {
+	    var _this = this;
+
 	    this._context = context;
 	    this._mountOrder = nextMountID++;
 	    this._hostParent = hostParent;
@@ -15402,7 +15403,11 @@
 
 	    if (inst.componentDidMount) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        transaction.getReactMountReady().enqueue(invokeComponentDidMountWithTimer, this);
+	        transaction.getReactMountReady().enqueue(function () {
+	          measureLifeCyclePerf(function () {
+	            return inst.componentDidMount();
+	          }, _this._debugID, 'componentDidMount');
+	        });
 	      } else {
 	        transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
 	      }
@@ -15426,35 +15431,26 @@
 
 	  _constructComponentWithoutOwner: function (doConstruct, publicProps, publicContext, updateQueue) {
 	    var Component = this._currentElement.type;
-	    var instanceOrElement;
+
 	    if (doConstruct) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'ctor');
-	        }
-	      }
-	      instanceOrElement = new Component(publicProps, publicContext, updateQueue);
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'ctor');
-	        }
-	      }
-	    } else {
-	      // This can still be an instance in case of factory components
-	      // but we'll count this as time spent rendering as the more common case.
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'render');
-	        }
-	      }
-	      instanceOrElement = Component(publicProps, publicContext, updateQueue);
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'render');
-	        }
+	        return measureLifeCyclePerf(function () {
+	          return new Component(publicProps, publicContext, updateQueue);
+	        }, this._debugID, 'ctor');
+	      } else {
+	        return new Component(publicProps, publicContext, updateQueue);
 	      }
 	    }
-	    return instanceOrElement;
+
+	    // This can still be an instance in case of factory components
+	    // but we'll count this as time spent rendering as the more common case.
+	    if (process.env.NODE_ENV !== 'production') {
+	      return measureLifeCyclePerf(function () {
+	        return Component(publicProps, publicContext, updateQueue);
+	      }, this._debugID, 'render');
+	    } else {
+	      return Component(publicProps, publicContext, updateQueue);
+	    }
 	  },
 
 	  performInitialMountWithErrorHandling: function (renderedElement, hostParent, hostContainerInfo, transaction, context) {
@@ -15463,11 +15459,6 @@
 	    try {
 	      markup = this.performInitialMount(renderedElement, hostParent, hostContainerInfo, transaction, context);
 	    } catch (e) {
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onError();
-	        }
-	      }
 	      // Roll back to checkpoint, handle error (which may add items to the transaction), and take a new checkpoint
 	      transaction.rollback(checkpoint);
 	      this._instance.unstable_handleError(e);
@@ -15488,17 +15479,19 @@
 
 	  performInitialMount: function (renderedElement, hostParent, hostContainerInfo, transaction, context) {
 	    var inst = this._instance;
+
+	    var debugID = 0;
+	    if (process.env.NODE_ENV !== 'production') {
+	      debugID = this._debugID;
+	    }
+
 	    if (inst.componentWillMount) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillMount');
-	        }
-	      }
-	      inst.componentWillMount();
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillMount');
-	        }
+	        measureLifeCyclePerf(function () {
+	          return inst.componentWillMount();
+	        }, debugID, 'componentWillMount');
+	      } else {
+	        inst.componentWillMount();
 	      }
 	      // When mounting, calls to `setState` by `componentWillMount` will set
 	      // `this._pendingStateQueue` without triggering a re-render.
@@ -15518,15 +15511,12 @@
 	    );
 	    this._renderedComponent = child;
 
-	    var selfDebugID = 0;
-	    if (process.env.NODE_ENV !== 'production') {
-	      selfDebugID = this._debugID;
-	    }
-	    var markup = ReactReconciler.mountComponent(child, transaction, hostParent, hostContainerInfo, this._processChildContext(context), selfDebugID);
+	    var markup = ReactReconciler.mountComponent(child, transaction, hostParent, hostContainerInfo, this._processChildContext(context), debugID);
 
 	    if (process.env.NODE_ENV !== 'production') {
-	      if (this._debugID !== 0) {
-	        ReactInstrumentation.debugTool.onSetChildren(this._debugID, child._debugID !== 0 ? [child._debugID] : []);
+	      if (debugID !== 0) {
+	        var childDebugIDs = child._debugID !== 0 ? [child._debugID] : [];
+	        ReactInstrumentation.debugTool.onSetChildren(debugID, childDebugIDs);
 	      }
 	    }
 
@@ -15547,24 +15537,22 @@
 	    if (!this._renderedComponent) {
 	      return;
 	    }
+
 	    var inst = this._instance;
 
 	    if (inst.componentWillUnmount && !inst._calledComponentWillUnmount) {
 	      inst._calledComponentWillUnmount = true;
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillUnmount');
-	        }
-	      }
+
 	      if (safely) {
 	        var name = this.getName() + '.componentWillUnmount()';
 	        ReactErrorUtils.invokeGuardedCallback(name, inst.componentWillUnmount.bind(inst));
 	      } else {
-	        inst.componentWillUnmount();
-	      }
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillUnmount');
+	        if (process.env.NODE_ENV !== 'production') {
+	          measureLifeCyclePerf(function () {
+	            return inst.componentWillUnmount();
+	          }, this._debugID, 'componentWillUnmount');
+	        } else {
+	          inst.componentWillUnmount();
 	        }
 	      }
 	    }
@@ -15651,13 +15639,21 @@
 	  _processChildContext: function (currentContext) {
 	    var Component = this._currentElement.type;
 	    var inst = this._instance;
-	    if (process.env.NODE_ENV !== 'production') {
-	      ReactInstrumentation.debugTool.onBeginProcessingChildContext();
+	    var childContext;
+
+	    if (inst.getChildContext) {
+	      if (process.env.NODE_ENV !== 'production') {
+	        ReactInstrumentation.debugTool.onBeginProcessingChildContext();
+	        try {
+	          childContext = inst.getChildContext();
+	        } finally {
+	          ReactInstrumentation.debugTool.onEndProcessingChildContext();
+	        }
+	      } else {
+	        childContext = inst.getChildContext();
+	      }
 	    }
-	    var childContext = inst.getChildContext && inst.getChildContext();
-	    if (process.env.NODE_ENV !== 'production') {
-	      ReactInstrumentation.debugTool.onEndProcessingChildContext();
-	    }
+
 	    if (childContext) {
 	      !(typeof Component.childContextTypes === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getChildContext(): childContextTypes must be defined in order to use getChildContext().', this.getName() || 'ReactCompositeComponent') : _prodInvariant('107', this.getName() || 'ReactCompositeComponent') : void 0;
 	      if (process.env.NODE_ENV !== 'production') {
@@ -15752,15 +15748,11 @@
 	    // immediately reconciled instead of waiting for the next batch.
 	    if (willReceive && inst.componentWillReceiveProps) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillReceiveProps');
-	        }
-	      }
-	      inst.componentWillReceiveProps(nextProps, nextContext);
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillReceiveProps');
-	        }
+	        measureLifeCyclePerf(function () {
+	          return inst.componentWillReceiveProps(nextProps, nextContext);
+	        }, this._debugID, 'componentWillReceiveProps');
+	      } else {
+	        inst.componentWillReceiveProps(nextProps, nextContext);
 	      }
 	    }
 
@@ -15770,15 +15762,11 @@
 	    if (!this._pendingForceUpdate) {
 	      if (inst.shouldComponentUpdate) {
 	        if (process.env.NODE_ENV !== 'production') {
-	          if (this._debugID !== 0) {
-	            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'shouldComponentUpdate');
-	          }
-	        }
-	        shouldUpdate = inst.shouldComponentUpdate(nextProps, nextState, nextContext);
-	        if (process.env.NODE_ENV !== 'production') {
-	          if (this._debugID !== 0) {
-	            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'shouldComponentUpdate');
-	          }
+	          shouldUpdate = measureLifeCyclePerf(function () {
+	            return inst.shouldComponentUpdate(nextProps, nextState, nextContext);
+	          }, this._debugID, 'shouldComponentUpdate');
+	        } else {
+	          shouldUpdate = inst.shouldComponentUpdate(nextProps, nextState, nextContext);
 	        }
 	      } else {
 	        if (this._compositeType === CompositeTypes.PureClass) {
@@ -15844,6 +15832,8 @@
 	   * @private
 	   */
 	  _performComponentUpdate: function (nextElement, nextProps, nextState, nextContext, transaction, unmaskedContext) {
+	    var _this2 = this;
+
 	    var inst = this._instance;
 
 	    var hasComponentDidUpdate = Boolean(inst.componentDidUpdate);
@@ -15858,15 +15848,11 @@
 
 	    if (inst.componentWillUpdate) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillUpdate');
-	        }
-	      }
-	      inst.componentWillUpdate(nextProps, nextState, nextContext);
-	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillUpdate');
-	        }
+	        measureLifeCyclePerf(function () {
+	          return inst.componentWillUpdate(nextProps, nextState, nextContext);
+	        }, this._debugID, 'componentWillUpdate');
+	      } else {
+	        inst.componentWillUpdate(nextProps, nextState, nextContext);
 	      }
 	    }
 
@@ -15880,7 +15866,9 @@
 
 	    if (hasComponentDidUpdate) {
 	      if (process.env.NODE_ENV !== 'production') {
-	        transaction.getReactMountReady().enqueue(invokeComponentDidUpdateWithTimer.bind(this, prevProps, prevState, prevContext), this);
+	        transaction.getReactMountReady().enqueue(function () {
+	          measureLifeCyclePerf(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), _this2._debugID, 'componentDidUpdate');
+	        });
 	      } else {
 	        transaction.getReactMountReady().enqueue(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), inst);
 	      }
@@ -15897,6 +15885,12 @@
 	    var prevComponentInstance = this._renderedComponent;
 	    var prevRenderedElement = prevComponentInstance._currentElement;
 	    var nextRenderedElement = this._renderValidatedComponent();
+
+	    var debugID = 0;
+	    if (process.env.NODE_ENV !== 'production') {
+	      debugID = this._debugID;
+	    }
+
 	    if (shouldUpdateReactComponent(prevRenderedElement, nextRenderedElement)) {
 	      ReactReconciler.receiveComponent(prevComponentInstance, nextRenderedElement, transaction, this._processChildContext(context));
 	    } else {
@@ -15909,15 +15903,12 @@
 	      );
 	      this._renderedComponent = child;
 
-	      var selfDebugID = 0;
-	      if (process.env.NODE_ENV !== 'production') {
-	        selfDebugID = this._debugID;
-	      }
-	      var nextMarkup = ReactReconciler.mountComponent(child, transaction, this._hostParent, this._hostContainerInfo, this._processChildContext(context), selfDebugID);
+	      var nextMarkup = ReactReconciler.mountComponent(child, transaction, this._hostParent, this._hostContainerInfo, this._processChildContext(context), debugID);
 
 	      if (process.env.NODE_ENV !== 'production') {
-	        if (this._debugID !== 0) {
-	          ReactInstrumentation.debugTool.onSetChildren(this._debugID, child._debugID !== 0 ? [child._debugID] : []);
+	        if (debugID !== 0) {
+	          var childDebugIDs = child._debugID !== 0 ? [child._debugID] : [];
+	          ReactInstrumentation.debugTool.onSetChildren(debugID, childDebugIDs);
 	        }
 	      }
 
@@ -15939,17 +15930,14 @@
 	   */
 	  _renderValidatedComponentWithoutOwnerOrContext: function () {
 	    var inst = this._instance;
+	    var renderedComponent;
 
 	    if (process.env.NODE_ENV !== 'production') {
-	      if (this._debugID !== 0) {
-	        ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'render');
-	      }
-	    }
-	    var renderedComponent = inst.render();
-	    if (process.env.NODE_ENV !== 'production') {
-	      if (this._debugID !== 0) {
-	        ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'render');
-	      }
+	      renderedComponent = measureLifeCyclePerf(function () {
+	        return inst.render();
+	      }, this._debugID, 'render');
+	    } else {
+	      renderedComponent = inst.render();
 	    }
 
 	    if (process.env.NODE_ENV !== 'production') {
@@ -16000,7 +15988,7 @@
 	    var publicComponentInstance = component.getPublicInstance();
 	    if (process.env.NODE_ENV !== 'production') {
 	      var componentName = component && component.getName ? component.getName() : 'a component';
-	      process.env.NODE_ENV !== 'production' ? warning(publicComponentInstance != null, 'Stateless function components cannot be given refs ' + '(See ref "%s" in %s created by %s). ' + 'Attempts to access this ref will fail.', ref, componentName, this.getName()) : void 0;
+	      process.env.NODE_ENV !== 'production' ? warning(publicComponentInstance != null || component._compositeType !== CompositeTypes.StatelessFunctional, 'Stateless function components cannot be given refs ' + '(See ref "%s" in %s created by %s). ' + 'Attempts to access this ref will fail.', ref, componentName, this.getName()) : void 0;
 	    }
 	    var refs = inst.refs === emptyObject ? inst.refs = {} : inst.refs;
 	    refs[ref] = publicComponentInstance;
@@ -16137,7 +16125,8 @@
 	  if (x === y) {
 	    // Steps 1-5, 7-10
 	    // Steps 6.b-6.e: +0 != -0
-	    return x !== 0 || 1 / x === 1 / y;
+	    // Added the nonzero y check to make Flow happy, but it is redundant
+	    return x !== 0 || y !== 0 || 1 / x === 1 / y;
 	  } else {
 	    // Step 6.a: NaN == NaN
 	    return x !== x && y !== y;
@@ -17191,10 +17180,15 @@
 
 	  var didWarn = {};
 
-	  validateDOMNesting = function (childTag, childInstance, ancestorInfo) {
+	  validateDOMNesting = function (childTag, childText, childInstance, ancestorInfo) {
 	    ancestorInfo = ancestorInfo || emptyAncestorInfo;
 	    var parentInfo = ancestorInfo.current;
 	    var parentTag = parentInfo && parentInfo.tag;
+
+	    if (childText != null) {
+	      process.env.NODE_ENV !== 'production' ? warning(childTag == null, 'validateDOMNesting: when childText is passed, childTag should be null') : void 0;
+	      childTag = '#text';
+	    }
 
 	    var invalidParent = isTagValidWithParent(childTag, parentTag) ? null : parentInfo;
 	    var invalidAncestor = invalidParent ? null : findInvalidAncestorForTag(childTag, ancestorInfo);
@@ -17243,7 +17237,15 @@
 	      didWarn[warnKey] = true;
 
 	      var tagDisplayName = childTag;
-	      if (childTag !== '#text') {
+	      var whitespaceInfo = '';
+	      if (childTag === '#text') {
+	        if (/\S/.test(childText)) {
+	          tagDisplayName = 'Text nodes';
+	        } else {
+	          tagDisplayName = 'Whitespace text nodes';
+	          whitespaceInfo = ' Make sure you don\'t have any extra whitespace between tags on ' + 'each line of your source code.';
+	        }
+	      } else {
 	        tagDisplayName = '<' + childTag + '>';
 	      }
 
@@ -17252,7 +17254,7 @@
 	        if (ancestorTag === 'table' && childTag === 'tr') {
 	          info += ' Add a <tbody> to your code to match the DOM tree generated by ' + 'the browser.';
 	        }
-	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a child of <%s>. ' + 'See %s.%s', tagDisplayName, ancestorTag, ownerInfo, info) : void 0;
+	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a child of <%s>.%s ' + 'See %s.%s', tagDisplayName, ancestorTag, whitespaceInfo, ownerInfo, info) : void 0;
 	      } else {
 	        process.env.NODE_ENV !== 'production' ? warning(false, 'validateDOMNesting(...): %s cannot appear as a descendant of ' + '<%s>. See %s.', tagDisplayName, ancestorTag, ownerInfo) : void 0;
 	      }
@@ -17559,7 +17561,7 @@
 	      if (parentInfo) {
 	        // parentInfo should always be present except for the top-level
 	        // component when server rendering
-	        validateDOMNesting('#text', this, parentInfo);
+	        validateDOMNesting(null, this._stringText, this, parentInfo);
 	      }
 	    }
 
@@ -19152,7 +19154,7 @@
 	      bubbled: keyOf({ onSelect: null }),
 	      captured: keyOf({ onSelectCapture: null })
 	    },
-	    dependencies: [topLevelTypes.topBlur, topLevelTypes.topContextMenu, topLevelTypes.topFocus, topLevelTypes.topKeyDown, topLevelTypes.topMouseDown, topLevelTypes.topMouseUp, topLevelTypes.topSelectionChange]
+	    dependencies: [topLevelTypes.topBlur, topLevelTypes.topContextMenu, topLevelTypes.topFocus, topLevelTypes.topKeyDown, topLevelTypes.topKeyUp, topLevelTypes.topMouseDown, topLevelTypes.topMouseUp, topLevelTypes.topSelectionChange]
 	  }
 	};
 
@@ -29027,7 +29029,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #eeeeee;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 900px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: center;\n  -webkit-justify-content: center;\n  align-items: center;\n  -webkit-align-items: center;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockForm {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.5em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.15em;\n  border-width: 1px;\n  border-radius: 4px 4px 0 0;\n  border-color: rgba(0, 0, 0, 0.5);\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.25em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.5em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 1 1 auto;\n  -webkit-flex: 1 1 auto;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockBox > p {\n  margin: 0 ;\n  text-align: center;\n  line-height: 2.5em;\n}\n\n.stockBox > span {\n  cursor: pointer;\n  top: 0.1em;\n  left: 4em;\n  position: relative;\n\n}\n\n.stockGraph {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n}\n\n.graphButtons {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  -webkit-align-self: flex-start;\n  align-self: flex-start;\n  margin: 0.25em;\n  width: 3em;\n  height: 3em;\n  background: none;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n  cursor: pointer;\n  outline: none;\n}\n", ""]);
+	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #eeeeee;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 900px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: flex-start;\n  -webkit-justify-content: flex-start;\n  align-items: flex-start;\n  -webkit-align-items: flex-start;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockForm {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.5em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.15em;\n  border-width: 1px;\n  border-radius: 4px 4px 0 0;\n  border-color: rgba(0, 0, 0, 0.5);\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.25em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.5em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  min-width: 60%;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockBox > p {\n  margin: 0 ;\n  text-align: center;\n  line-height: 2.5em;\n}\n\n.stockBox > span {\n  cursor: pointer;\n  top: 0.1em;\n  left: 4em;\n  position: relative;\n\n}\n\n.stockGraph {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  padding: 1.5em 0.5em;\n}\n\n#lineGraph {\n  position: absolute;\n}\n\n.buttonList {\n  padding: 0 0.5em;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n}\n\n.stockButton {\n  margin-right: 0.5em;\n  width: 3em;\n  height: 3em;\n  background: none;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n  cursor: pointer;\n  outline: none;\n}\n", ""]);
 
 	// exports
 
@@ -29369,12 +29371,16 @@
 	      stockSymbol: e.target.value
 	    });
 	  },
+	  isValidSubmit: function isValidSubmit(entry) {
+	    return (/^[a-zA-Z-.]{1,5}$/.test(entry)
+	    );
+	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
 
 	    var stockSymbol = this.state.stockSymbol.trim();
 
-	    if (stockSymbol.length) {
+	    if (this.isValidSubmit(stockSymbol)) {
 	      this.props.onStockSubmit({ stockSymbol: stockSymbol });
 	      this.setState({ stockSymbol: "" });
 	    }
@@ -29423,17 +29429,23 @@
 	  getStockState: function getStockState() {
 	    return this.props.data;
 	  },
+	  getTimeState: function getTimeState() {
+	    return this.props.time;
+	  },
 	  componentWillUpdate: function componentWillUpdate() {
 	    _D3Graph2.default.clear();
 	  },
 	  componentDidUpdate: function componentDidUpdate() {
-	    _D3Graph2.default.create(this.getStockState());
+	    console.log(this.props.data);
+	    _D3Graph2.default.create(_D3Graph2.default.transform(JSON.parse(JSON.stringify(this.getStockState())), this.getTimeState()));
 	  },
+	  propTypes: {},
 	  render: function render() {
 	    return React.createElement(
 	      "div",
 	      { className: "stockGraph" },
-	      React.createElement("canvas", { width: "800", height: "500" })
+	      React.createElement("canvas", { id: "lineGraph", width: "850", height: "500" }),
+	      React.createElement("canvas", { id: "priceGraph", width: "850", height: "500" })
 	    );
 	  }
 	});
@@ -29460,11 +29472,53 @@
 
 	D3Graph.clear = function () {
 
-	  var canvas = document.getElementsByTagName("canvas")[0];
-	  var context = canvas.getContext("2d");
+	  var canvas1 = document.getElementsByTagName("canvas")[0];
+	  var context1 = canvas1.getContext("2d");
 
-	  context.setTransform(1, 0, 0, 1, 0, 0);
-	  context.clearRect(0, 0, canvas.width, canvas.height);
+	  var canvas2 = document.getElementsByTagName("canvas")[1];
+	  var context2 = canvas2.getContext("2d");
+
+	  context1.setTransform(1, 0, 0, 1, 0, 0);
+	  context1.clearRect(0, 0, canvas1.width, canvas1.height);
+
+	  context2.setTransform(1, 0, 0, 1, 0, 0);
+	  context2.clearRect(0, 0, canvas2.width, canvas2.height);
+	};
+
+	D3Graph.transform = function (data, timeObj) {
+
+	  var currDate = new Date();
+
+	  if (timeObj.days) {
+	    currDate.setDate(currDate.getDate() - timeObj.days);
+	  }
+
+	  if (timeObj.months) {
+	    currDate.setMonth(currDate.getMonth() - timeObj.months);
+	  }
+
+	  if (timeObj.years) {
+	    currDate.setYear(currDate.getYear() - timeObj.years);
+	  }
+
+	  var cutoffDate = currDate.getTime();
+
+	  data = data.map(function (currStock) {
+	    currStock.data = currStock.data.filter(function (dayData) {
+	      if (dayData.date > cutoffDate) {
+	        return dayData;
+	      }
+	    });
+	    return currStock;
+	  });
+
+	  data.forEach(function (currStock) {
+	    var initialStockPrice = currStock.data[0].price;
+	    currStock.data.forEach(function (dayData) {
+	      dayData.percent = ((dayData.price - initialStockPrice) / initialStockPrice * 100).toFixed(2);
+	    });
+	  });
+	  return data;
 	};
 
 	D3Graph.create = function (data) {
@@ -29473,18 +29527,20 @@
 	  var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
 	  var margin = { top: 15, right: 15, bottom: 20, left: 35 };
-	  var header = 75;
+	  var header = 50;
 
-	  var canvas = document.getElementsByTagName("canvas")[0];
-	  var context = canvas.getContext("2d");
+	  var canvas1 = document.getElementById("lineGraph");
+	  var canvas2 = document.getElementById("priceGraph");
+	  var context1 = canvas1.getContext("2d");
+	  var context2 = canvas2.getContext("2d");
 
-	  var width = canvas.width - margin.right - margin.left;
-	  var height = canvas.height - margin.top - margin.bottom;
+	  var width = canvas1.width - margin.right - margin.left;
+	  var height = canvas1.height - margin.top - margin.bottom;
 
 	  var xScale = d3.scaleTime().range([0, width]);
-	  var yScale = d3.scaleLinear().range([height, header]);
+	  var yScale = d3.scaleLinear().range([height, header]).nice();
 
-	  context.translate(margin.left, margin.top);
+	  context1.translate(margin.left, margin.top);
 
 	  var flattenedArray = [].concat.apply([], data.map(function (d) {
 	    return d.data;
@@ -29494,7 +29550,7 @@
 	    return new Date(d.date);
 	  }));
 	  yScale.domain(d3.extent(flattenedArray, function (d) {
-	    return parseInt(d.percent);
+	    return parseFloat(d.percent);
 	  }));
 
 	  var tickCount = 10;
@@ -29504,15 +29560,14 @@
 	  drawYAxis();
 	  drawStockData(data);
 
-	  canvas.addEventListener("mousemove", function (e) {
+	  canvas1.addEventListener("mousemove", function (e) {
 	    var location = getMouseLocation(e);
 
 	    if (location.xPos > margin.left && location.xPos < width + margin.left) {
 
-	      context.clearRect(0, 0, canvas.width, canvas.height - margin.bottom - margin.top);
+	      context2.clearRect(0, 0, canvas2.width, canvas2.height - margin.bottom - margin.top);
 
 	      if (data.length) {
-	        drawStockData(data);
 	        drawVerticalLine(location);
 	        showStockPrice(location);
 	      }
@@ -29520,7 +29575,7 @@
 	  });
 
 	  function getMouseLocation(e) {
-	    var rectangle = canvas.getBoundingClientRect();
+	    var rectangle = canvas1.getBoundingClientRect();
 	    return {
 	      xPos: e.clientX - rectangle.left,
 	      yPos: e.clientY - rectangle.top
@@ -29534,7 +29589,7 @@
 	  var currencyFormat = d3.format(",.2f");
 	  var percentFormat = d3.format(".2%");
 
-	  context.textAlign = "start";
+	  context1.textAlign = "start";
 
 	  function showStockPrice(location) {
 
@@ -29544,41 +29599,41 @@
 	    var stockDate = new Date(data[0].data[dateIndex].date);
 	    var dateMessage = monthNames[stockDate.getMonth()] + " " + stockDate.getDate();
 
-	    context.font = "24pt Calibri";
-	    context.fillStyle = "#757575";
-	    context.fillText(dateMessage, canvas.width - 175, canvas.height - 75);
+	    context2.font = "24pt Calibri";
+	    context2.fillStyle = "#757575";
+	    context2.fillText(dateMessage, canvas1.width - 100, canvas1.height - 50);
 
 	    data.forEach(function (stock, index, array) {
 
-	      var startLeft = margin.left + index % 3 * 250;
+	      var startLeft = margin.left + 50 + index % 3 * 225;
 	      var startTop = margin.top + Math.floor(index / 3) * 40;
 
-	      context.beginPath();
-	      context.arc(startLeft - 10, startTop, 5, 2 * Math.PI, false);
-	      context.font = "14pt Calibri";
-	      context.fillStyle = colors(index);
-	      context.fill();
-	      context.closePath();
+	      context2.beginPath();
+	      context2.arc(startLeft - 10, startTop - 5, 5, 2 * Math.PI, false);
+	      context2.font = "14pt Calibri";
+	      context2.fillStyle = colors(index);
+	      context2.fill();
 
 	      var stockPrice = stock.data[dateIndex].price;
 	      var stockPercent = stock.data[dateIndex].percent;
 
 	      var stockMessage = stock.symbol + " $" + currencyFormat(stockPrice) + " " + stockPercent + "%";
 
-	      context.fillText(stockMessage, startLeft, startTop);
+	      context2.fillText(stockMessage, startLeft, startTop);
 	    });
+	    context2.closePath();
 	  }
 
 	  function drawVerticalLine(location) {
 
-	    context.beginPath();
-	    context.moveTo(location.xPos - margin.left, header);
-	    context.lineTo(location.xPos - margin.left, height);
-	    context.strokeStyle = "#757575";
-	    context.lineWidth = 1;
-	    context.setLineDash([2, 5]);
-	    context.stroke();
-	    context.closePath();
+	    context2.beginPath();
+	    context2.moveTo(location.xPos, header + margin.top);
+	    context2.lineTo(location.xPos, height);
+	    context2.strokeStyle = "#757575";
+	    context2.lineWidth = 1;
+	    context2.setLineDash([2, 5]);
+	    context2.stroke();
+	    context2.closePath();
 	  }
 
 	  function drawStockData(data) {
@@ -29589,37 +29644,37 @@
 	        return xScale(new Date(d.date));
 	      }).y(function (d) {
 	        return yScale(d.percent);
-	      }).context(context);
-	      context.beginPath();
+	      }).context(context1);
+	      context1.beginPath();
 	      lineData(stock.data);
-	      context.strokeStyle = colors(index);
-	      context.lineWidth = 2;
-	      context.setLineDash([]);
-	      context.stroke();
-	      context.closePath();
+	      context1.strokeStyle = colors(index);
+	      context1.lineWidth = 2;
+	      context1.setLineDash([]);
+	      context1.stroke();
 	    });
+	    context1.closePath();
 	  }
 
 	  function drawXAxis() {
 	    var ticks = xScale.ticks(tickCount);
 	    var tickFormat = xScale.tickFormat();
 
-	    context.beginPath();
+	    context1.beginPath();
 	    ticks.forEach(function (t) {
-	      context.moveTo(xScale(t), height);
-	      context.lineTo(xScale(t), height + tickSize);
+	      context1.moveTo(xScale(t), height);
+	      context1.lineTo(xScale(t), height + tickSize);
 	    });
-	    context.font = "10pt Calibri";
-	    context.strokeStyle = "#616161";
-	    context.stroke();
-	    context.closePath();
+	    context1.font = "10pt Calibri";
+	    context1.strokeStyle = "#616161";
+	    context1.stroke();
 
-	    context.textAlign = "center";
-	    context.textBaseline = "top";
-	    context.fillStyle = "#616161";
+	    context1.textAlign = "center";
+	    context1.textBaseline = "top";
+	    context1.fillStyle = "#616161";
 	    ticks.forEach(function (t) {
-	      context.fillText(tickFormat(t).substr(0, 3), xScale(t), height + tickSize);
+	      context1.fillText(tickFormat(t), xScale(t), height + tickSize);
 	    });
+	    context1.closePath();
 	  }
 
 	  function drawYAxis() {
@@ -29627,22 +29682,22 @@
 	    var ticks = yScale.ticks(tickCount);
 	    var tickFormat = yScale.tickFormat(tickCount);
 
-	    context.beginPath();
+	    context1.beginPath();
 	    ticks.forEach(function (t) {
-	      context.moveTo(0, yScale(t));
-	      context.lineTo(-6, yScale(t));
+	      context1.moveTo(0, yScale(t));
+	      context1.lineTo(-6, yScale(t));
 	    });
-	    context.font = "10pt Calibri";
-	    context.strokeStyle = "#616161";
-	    context.stroke();
-	    context.closePath();
+	    context1.font = "10pt Calibri";
+	    context1.strokeStyle = "#616161";
+	    context1.stroke();
 
-	    context.textAlign = "right";
-	    context.textBaseline = "middle";
-	    context.fillStyle = "#616161";
+	    context1.textAlign = "right";
+	    context1.textBaseline = "middle";
+	    context1.fillStyle = "#616161";
 	    ticks.forEach(function (d) {
-	      context.fillText(tickFormat(d), -tickSize - tickPadding, yScale(d));
+	      context1.fillText(tickFormat(d), -tickSize - tickPadding, yScale(d));
 	    });
+	    context1.closePath();
 	  }
 	};
 
@@ -46025,30 +46080,53 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	var GraphButtons = React.createClass({
-	  displayName: "GraphButtons",
+	var StockButtons = React.createClass({
+	  displayName: "StockButtons",
 
 
+	  handleClick: function handleClick(e) {
+
+	    var timeFrame = { days: 0, months: 0, years: 0 };
+	    var clickedText = e.target.innerHTML;
+
+	    switch (clickedText) {
+	      case "1m":
+	        timeFrame.months = 1;
+	        break;
+	      case "3m":
+	        timeFrame.months = 3;
+	        break;
+	      case "6m":
+	        timeFrame.months = 6;
+	        break;
+	      case "1yr":
+	        timeFrame.years = 1;
+	        break;
+	    }
+	    this.props.onTimeChange(timeFrame);
+	  },
 	  render: function render() {
-	    var buttonText = ["1d", "5d", "1m", "3m", "1yr"];
+	    var _this = this;
 
-	    var buttonNodes = buttonText.map(function (currText) {
+	    var buttonText = ["1m", "3m", "6m", "1yr"];
+
+	    var buttonNodes = buttonText.map(function (currText, index) {
 	      return React.createElement(
 	        "button",
-	        { className: "graphButtons", type: "button" },
+	        { onClick: _this.handleClick, className: "stockButton", key: index, type: "button" },
 	        currText
 	      );
 	    });
 
 	    return React.createElement(
 	      "div",
-	      null,
+	      { className: "buttonList" },
 	      buttonNodes
 	    );
 	  }
 	});
 
-	module.exports = GraphButtons;
+	module.exports = StockButtons;
 
 /***/ }
 /******/ ]);

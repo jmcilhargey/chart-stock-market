@@ -22,10 +22,10 @@ body {
   background: #fff;
   display: flex;
   display: -webkit-flex;
-  justify-content: center;
-  -webkit-justify-content: center;
-  align-items: center;
-  -webkit-align-items: center;
+  justify-content: flex-start;
+  -webkit-justify-content: flex-start;
+  align-items: flex-start;
+  -webkit-align-items: flex-start;
   flex-direction: row;
   -webkit-flex-direction: row;
   flex-wrap: wrap;
@@ -76,8 +76,9 @@ body {
 }
 
 .stockList {
-  flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
+  flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+  min-width: 60%;
   display: flex;
   display: -webkit-flex;
 }
@@ -109,14 +110,21 @@ body {
 .stockGraph {
   flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
+  padding: 1.5em 0.5em;
 }
 
-.graphButtons {
+#lineGraph {
+  position: absolute;
+}
+
+.buttonList {
+  padding: 0 0.5em;
   flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
-  -webkit-align-self: flex-start;
-  align-self: flex-start;
-  margin: 0.25em;
+}
+
+.stockButton {
+  margin-right: 0.5em;
   width: 3em;
   height: 3em;
   background: none;

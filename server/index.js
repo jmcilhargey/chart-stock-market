@@ -12,6 +12,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 
 const stocks = require("./apis/stocks");
+const twitter = require("./apis/twitter");
 
 MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
 
@@ -36,7 +37,7 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
       stocks.getQuote(data.stockSymbol).then((value) => {
 
         if (value.status !== 200) {
-          socket.emit("search_error", { status: value.status, error: value.data.quandl_error.code, symbol: stockSymbol });
+          socket.emit("search_error", { status: value.status, error: value.message });
 
         } else {
           db.collection("stocks").insertOne(value, {
@@ -90,6 +91,14 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
 });
 
 app.use(express.static(__dirname + "/../build"));
+
+app.route("/api/twitter").get((req, res) => {
+  twitter.getToken().then((value) => {
+    console.log(value);
+  }, (reason) => {
+    console.log(reason);
+  });
+});
 
 app.route("/*").get((req, res) => {
   res.sendFile(process.cwd() + "/client/index.html");

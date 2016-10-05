@@ -12,7 +12,6 @@ var StockBox = React.createClass({
       <div className="stockBox">
         <span onClick={ this.handleClick } className="closeBox">x</span>
         <p>{ this.props.symbol }</p>
-
       </div>
     );
   }

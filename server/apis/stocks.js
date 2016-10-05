@@ -43,13 +43,21 @@ module.exports = {
           } catch (error) {
             reject(error);
           }
-          var formattedData = transform(jsonData);
-          resolve({
-            "status": response.statusCode,
-            "headers": response.headers,
-            "symbol": jsonData.dataset.dataset_code,
-            "data": formattedData
-          });
+
+          if (response.statusCode === 200) {
+            resolve({
+              "status": response.statusCode,
+              "headers": response.headers,
+              "symbol": jsonData.dataset.dataset_code,
+              "data": transform(jsonData)
+            });
+          } else {
+            resolve({
+              "status": response.statusCode,
+              "headers": response.headers,
+              "message": response.statusMessage
+            });
+          }
         });
       });
       request.on("error", (error) => {
