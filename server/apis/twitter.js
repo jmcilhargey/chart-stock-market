@@ -12,37 +12,33 @@ module.exports = {
 
     var promise = new Promise((resolve, reject) => {
 
-      var credentials = encode(process.env.TWITTER_KEY) + ":" + encode(process.env.TWITTER_SECRET);
+      var credentials = new Buffer(encode(process.env.TWITTER_KEY) + ":" + encode(process.env.TWITTER_SECRET)).toString("base64");
 
       var headers = {
-        "Host": "api.twitter.com",
         "User-Agent": "Stock Tracker App v1.0.0",
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        "Accept-Encoding": "gzip",
         "Authorization": "Basic " + credentials,
-        "Content-Length": 29
+        "Transfer-Encoding": "chunked"
       };
 
       var httpsOpts = {
         "hostname": "api.twitter.com",
         "headers": headers,
-        "port": 80,
         "path": "/oauth2/token",
         "method": "POST"
       };
 
       var request = https.request(httpsOpts, (response) => {
 
-        var string = "";
+        var body = [];
 
         response.on("data", (chunk) => {
-          string += chunk;
+          body.push(chunk);
         });
 
         response.on("end", () => {
-
           try {
-            var jsonData = JSON.parse(string);
+            var jsonData = JSON.parse([].concat(body).toString());
           } catch (error) {
             reject(error);
           }
@@ -57,6 +53,7 @@ module.exports = {
       request.on("error", (error) => {
         reject(error);
       });
+      request.write("grant_type=client_credentials");
       request.end();
     });
     return promise;

@@ -94,9 +94,9 @@ app.use(express.static(__dirname + "/../build"));
 
 app.route("/api/twitter").get((req, res) => {
   twitter.getToken().then((value) => {
-    console.log(value);
+    res.send(value);
   }, (reason) => {
-    console.log(reason);
+    res.send(reason);
   });
 });
 
