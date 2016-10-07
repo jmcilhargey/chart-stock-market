@@ -61,6 +61,19 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
       });
     });
 
+    socket.on("request_tweets", (data) => {
+
+      twitter.getData(data).then((value) => {
+        value.statuses.forEach((value) => {
+          console.log(value);
+        });
+
+        socket.emit("get_tweets", value.statuses);
+      }, (reason) => {
+        console.log(reason);
+      });
+    });
+
     socket.on("delete_stock", (id) => {
 
       db.collection("stocks").deleteOne({ "_id": ObjectId(id) }, {
@@ -87,18 +100,9 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
       console.log("User disconnected");
     });
   });
-
 });
 
 app.use(express.static(__dirname + "/../build"));
-
-app.route("/api/twitter").get((req, res) => {
-  twitter.getToken().then((value) => {
-    res.send(value);
-  }, (reason) => {
-    res.send(reason);
-  });
-});
 
 app.route("/*").get((req, res) => {
   res.sendFile(process.cwd() + "/client/index.html");

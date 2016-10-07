@@ -10,6 +10,7 @@ import StockForm from "./components/StockForm";
 import StockGraph from "./components/StockGraph";
 import StockList from "./components/StockList";
 import StockButtons from "./components/StockButtons";
+import StockTweets from "./components/StockTweets";
 
 var socket = io.connect("http://localhost:3000", { reconnection: false });
 
@@ -23,17 +24,22 @@ socket.on("connect_error", (error) => {
 
 var StockApp = React.createClass({
 
-  handleStockSubmit: function(stockData) {
-
-    if (this.state.data.length <= 5) {
+  handleStockRequest: function(stockData) {
+    stockData.forEach((stock) => {
+      console.log(stock);
+    });
+    if (this.state.stocks.length <= 5) {
       socket.emit("request_stock", stockData);
     }
   },
+  handleTweetRequest: function(symbol) {
+    socket.emit("request_tweets", symbol);
+  },
   handleRemoveStock: function(stockIndex) {
-    socket.emit("delete_stock", this.state.data[stockIndex]._id);
+    socket.emit("delete_stock", this.state.stocks[stockIndex]._id);
 
     this.setState({
-      data: this.state.data.filter((stock, index) => index !== stockIndex)
+      stocks: this.state.stocks.filter((stock, index) => index !== stockIndex)
     });
   },
   handleTimeChange: function(newTime) {
@@ -43,15 +49,16 @@ var StockApp = React.createClass({
   },
   getInitialState: function() {
     return {
-      data: [],
-      time: { days: 0, months: 0, years: 1 }
+      stocks: [],
+      time: { days: 0, months: 0, years: 1 },
+      tweets: []
     };
   },
   componentDidMount: function() {
 
     socket.on("get_stocks", (stockList) => {
       this.setState({
-        data: stockList
+        stocks: stockList
       });
     });
 
@@ -60,14 +67,24 @@ var StockApp = React.createClass({
       if (addedStock.error) {
 
       } else {
-        var newState = this.state.data.slice();
+        var newState = this.state.stocks.slice();
         newState.push(addedStock);
 
         this.setState({
-          data: newState
+          stocks: newState
         });
       }
     });
+
+    socket.on("get_tweets", (tweetList) => {
+      tweetList.forEach((tweet) => {
+        console.log(tweet);
+      });
+      this.setState({
+        tweets: tweetList
+      });
+    });
+
     socket.on("search_error", (errorMessage) => {
       console.log(errorMessage);
     });
@@ -75,10 +92,11 @@ var StockApp = React.createClass({
   render: function() {
     return (
       <div className="stockApp">
-        <StockForm onStockSubmit={ this.handleStockSubmit }/>
-        <StockList onRemoveStock={ this.handleRemoveStock } data={ this.state.data }/>
+        <StockForm onStockRequest={ this.handleStockSubmit }/>
+        <StockList stocks={ this.state.stocks } onRemoveStock={ this.handleRemoveStock } onAddTweets={ this.handleTweetRequest }/>
         <StockButtons onTimeChange= { this.handleTimeChange } />
-        <StockGraph data={ this.state.data } time={ this.state.time }/>
+        <StockGraph stocks={ this.state.stocks } time={ this.state.time }/>
+        <StockTweets tweets={ this.state.tweets } />
       </div>
     );
   }

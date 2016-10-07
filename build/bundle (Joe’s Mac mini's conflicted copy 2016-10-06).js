@@ -76,7 +76,7 @@
 
 	var _StockButtons2 = _interopRequireDefault(_StockButtons);
 
-	var _StockTweets = __webpack_require__(233);
+	var _StockTweets = __webpack_require__(235);
 
 	var _StockTweets2 = _interopRequireDefault(_StockTweets);
 
@@ -99,9 +99,7 @@
 
 
 	  handleStockRequest: function handleStockRequest(stockData) {
-	    stockData.forEach(function (stock) {
-	      console.log(stock);
-	    });
+
 	    if (this.state.stocks.length <= 5) {
 	      socket.emit("request_stock", stockData);
 	    }
@@ -127,7 +125,7 @@
 	    return {
 	      stocks: [],
 	      time: { days: 0, months: 0, years: 1 },
-	      tweets: []
+	      tweets: ""
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
@@ -152,11 +150,8 @@
 	    });
 
 	    socket.on("get_tweets", function (tweetList) {
-	      tweetList.forEach(function (tweet) {
-	        console.log(tweet);
-	      });
 	      _this.setState({
-	        tweets: tweetList
+	        tweets: JSON.stringify(tweetList)
 	      });
 	    });
 
@@ -29050,7 +29045,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #eeeeee;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 900px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: flex-start;\n  -webkit-justify-content: flex-start;\n  align-items: flex-start;\n  -webkit-align-items: flex-start;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockForm {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.5em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.15em;\n  border-width: 1px;\n  border-radius: 4px 4px 0 0;\n  border-color: rgba(0, 0, 0, 0.5);\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.25em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.5em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  min-width: 60%;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockBox > p {\n  cursor: pointer;\n  margin: 0;\n  text-align: center;\n  line-height: 2.5em;\n}\n\n.stockBox > span {\n  cursor: pointer;\n  top: 0.1em;\n  left: 4em;\n  position: relative;\n}\n\n.stockGraph {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  padding: 1.5em 0.5em;\n}\n\n#lineGraph {\n  position: absolute;\n}\n\n.buttonList {\n  padding: 0 0.5em;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n}\n\n.stockButton {\n  margin-right: 0.5em;\n  width: 3em;\n  height: 3em;\n  background: none;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n  cursor: pointer;\n  outline: none;\n}\n\n.stockTweets {\n  padding: 1em;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n}\n", ""]);
+	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  font-family: \"Roboto\", sans-serif;\n  color: #424242;\n  background: #eeeeee;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n}\n\n.container {\n  margin: 0 auto;\n  height: 100%;\n  width: 900px;\n}\n\n.stockApp {\n  margin: 5em 0;\n  padding: 1em;\n  background: #fff;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: flex-start;\n  -webkit-justify-content: flex-start;\n  align-items: flex-start;\n  -webkit-align-items: flex-start;\n  flex-direction: row;\n  -webkit-flex-direction: row;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n  overflow: hidden;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockForm {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.stockForm input[type=text] {\n  color: #424242;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.5em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.15em;\n  border-width: 1px;\n  border-radius: 4px 4px 0 0;\n  border-color: rgba(0, 0, 0, 0.5);\n  outline: none;\n}\n\n.stockForm input[type=submit] {\n  color: #424242;\n  cursor: pointer;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  font-size: 1.25em;\n  font-weight: 300;\n  letter-spacing: 0.04em;\n  padding: 0.5em;\n  background: #fff;\n  border-radius: 0 0 4px 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-top: none;\n  outline: none;\n}\n\n.stockList {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  min-width: 60%;\n  display: flex;\n  display: -webkit-flex;\n}\n\n.stockBox {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  margin: 0.5em;\n  width: 5em;\n  height: 5em;\n  border-radius: 4px;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n}\n\n.stockBox > p {\n  cursor: pointer;\n  margin: 0;\n  text-align: center;\n  line-height: 2.5em;\n}\n\n.stockBox > span {\n  cursor: pointer;\n  top: 0.1em;\n  left: 4em;\n  position: relative;\n}\n\n.stockGraph {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  padding: 1.5em 0.5em;\n}\n\n#lineGraph {\n  position: absolute;\n}\n\n.buttonList {\n  padding: 0 0.5em;\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n}\n\n.stockButton {\n  margin-right: 0.5em;\n  width: 3em;\n  height: 3em;\n  background: none;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n  cursor: pointer;\n  outline: none;\n}\n\n.stockTweets {\n  flex: 0 1 auto;\n  -webkit-flex: 0 1 auto;\n  border: 1px solid rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n}\n", ""]);
 
 	// exports
 
@@ -46156,7 +46151,9 @@
 	module.exports = StockButtons;
 
 /***/ },
-/* 233 */
+/* 233 */,
+/* 234 */,
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -46170,39 +46167,11 @@
 	var StockTweets = React.createClass({
 	  displayName: "StockTweets",
 
-	  formatDate: function formatDate(dateObj) {
-	    var dayName = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-	    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	    return dayName[dateObj.getDay()] + " " + monthNames[dateObj.getMonth()] + " " + dateObj.getDate() + " ";
-	  },
 	  render: function render() {
-	    var _this = this;
-
-	    var tweetList = this.props.tweets.map(function (tweet, index) {
-	      return React.createElement(
-	        "div",
-	        { key: index },
-	        React.createElement(
-	          "div",
-	          null,
-	          _this.formatDate(new Date(tweet.created_at))
-	        ),
-	        React.createElement(
-	          "div",
-	          null,
-	          tweet.text
-	        ),
-	        React.createElement(
-	          "div",
-	          null,
-	          tweet.retweet_count
-	        )
-	      );
-	    });
 	    return React.createElement(
 	      "div",
 	      { className: "stockTweets" },
-	      tweetList
+	      this.props.tweets
 	    );
 	  }
 	});

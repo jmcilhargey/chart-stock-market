@@ -6,7 +6,7 @@ import D3Graph from "./D3Graph";
 var StockGraph = React.createClass({
 
   getStockState: function() {
-    return this.props.data;
+    return this.props.stocks;
   },
   getTimeState: function() {
     return this.props.time;
@@ -15,7 +15,6 @@ var StockGraph = React.createClass({
     D3Graph.clear();
   },
   componentDidUpdate: function() {
-    console.log(this.props.data);
     D3Graph.create(D3Graph.transform(JSON.parse(JSON.stringify(this.getStockState())), this.getTimeState()));
   },
   propTypes: {

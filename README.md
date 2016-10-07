@@ -1,22 +1,9 @@
+TODO: Write guide for building app and complete Twitter integration.
 
-     ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
-    '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
-    |  |    |  || .-. ||  ||  |' .-. |`..'  |  |  ||  |  \  :|  `--, 
-    '  '--'\|  |' '-' ''  ''  '\ `-' | .'  /   |  ||  '--'  /|  `---.
-     `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
-    ----------------------------------------------------------------- 
-
-
-Welcome to your Node.js project on Cloud9 IDE!
-
-This chat example showcases how to use `socket.io` with a static `express` server.
-
-## Running the server
-
-1) Open `server.js` and start the app by clicking on the "Run" button in the top menu.
-
-2) Alternatively you can launch the app from the Terminal:
-
-    $ node server.js
-
-Once the server is running, open the project in the shape of 'https://projectname-username.c9.io/'. As you enter your name, watch the Users list (on the left) update. Once you press Enter or Send, the message is shared with all connected clients.
+1. Building WebSocket server to accept client connections.
+2. Connecting WebSocket events to API calls for Quandl (financial) and Twitter (social) data
+3. Structuring app front-end using React components and flexbox for layout
+4. Listening and firing events from the client side
+5. Building dynamic graphs showing stock data using HTML5 canvas and d3.js
+6. Adding features to parse data and display data based on user input
+7. Adding tests and logic to make sure app functions as intended

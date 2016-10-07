@@ -7,15 +7,19 @@ var StockList = React.createClass({
   onRemoveStock: function(index) {
     this.props.onRemoveStock(index);
   },
+  onAddTweets: function(symbol) {
+    this.props.onAddTweets(symbol);
+  },
   render: function() {
 
-    var stockNodes = this.props.data.map((stock, index) => {
+    var stockNodes = this.props.stocks.map((stock, index) => {
       return (
         <StockBox
         symbol={ stock.symbol }
         key={ index }
         index={ index }
-        onRemoveStock= { this.onRemoveStock } />
+        onRemoveStock= { this.onRemoveStock }
+        onAddTweets= { this.onAddTweets } />
       );
     });
 
