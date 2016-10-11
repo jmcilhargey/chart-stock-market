@@ -135,9 +135,14 @@ body {
 }
 
 .stockTweets {
+  width: 100%;
   padding: 1em;
   flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
   border: 1px solid rgba(0, 0, 0, 0.5);
   border-radius: 4px;
+}
+
+.stockTweets > h3 {
+  margin: 0;
 }

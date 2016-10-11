@@ -64,9 +64,6 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
     socket.on("request_tweets", (data) => {
 
       twitter.getData(data).then((value) => {
-        value.statuses.forEach((value) => {
-          console.log(value);
-        });
 
         socket.emit("get_tweets", value.statuses);
       }, (reason) => {
@@ -90,10 +87,6 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
           socket.emit("get_stocks", data);
         });
       });
-    });
-
-    socket.on("change_dates", (data) => {
-      console.log(data);
     });
 
     socket.on("disconnect", () => {

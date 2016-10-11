@@ -25,9 +25,6 @@ socket.on("connect_error", (error) => {
 var StockApp = React.createClass({
 
   handleStockRequest: function(stockData) {
-    stockData.forEach((stock) => {
-      console.log(stock);
-    });
     if (this.state.stocks.length <= 5) {
       socket.emit("request_stock", stockData);
     }
@@ -77,9 +74,6 @@ var StockApp = React.createClass({
     });
 
     socket.on("get_tweets", (tweetList) => {
-      tweetList.forEach((tweet) => {
-        console.log(tweet);
-      });
       this.setState({
         tweets: tweetList
       });
@@ -92,7 +86,7 @@ var StockApp = React.createClass({
   render: function() {
     return (
       <div className="stockApp">
-        <StockForm onStockRequest={ this.handleStockSubmit }/>
+        <StockForm onStockRequest={ this.handleStockRequest }/>
         <StockList stocks={ this.state.stocks } onRemoveStock={ this.handleRemoveStock } onAddTweets={ this.handleTweetRequest }/>
         <StockButtons onTimeChange= { this.handleTimeChange } />
         <StockGraph stocks={ this.state.stocks } time={ this.state.time }/>

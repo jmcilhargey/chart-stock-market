@@ -14,7 +14,7 @@ module.exports = {
 
         var headers = {
           "User-Agent": "Stock Tracker App v1.0.0",
-          "Authorization": "Bearer " + process.env.TWITTER_TOKEN
+          "Authorization": "Bearer " + process.env.TWITTER_SEARCH_TOKEN
         };
 
         var format = ".json?";
@@ -22,7 +22,8 @@ module.exports = {
         var urlParams = {
           "q": "#" + hashTag,
           "lang": "en",
-          "result_type": "recent"
+          "result_type": "mixed",
+          "count": 100
         };
 
         var httpsOpts = {

@@ -22,7 +22,7 @@ var StockForm = React.createClass({
     var stockSymbol = this.state.stockSymbol.trim();
 
     if (this.isValidSubmit(stockSymbol)) {
-      this.props.onStockSubmit({ stockSymbol: stockSymbol });
+      this.props.onStockRequest({ stockSymbol: stockSymbol });
       this.setState({ stockSymbol: "" });
     }
   },

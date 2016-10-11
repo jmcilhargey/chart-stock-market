@@ -21,6 +21,7 @@ var StockTweets = React.createClass({
     });
     return (
       <div className="stockTweets">
+        <h3 className="tweetHeader">Recent tweets for #AAPL</h3>
         { tweetList }
       </div>
     )
