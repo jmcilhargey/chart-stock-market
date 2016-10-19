@@ -13,8 +13,9 @@ const io = require("socket.io")(server);
 
 const stocks = require("./apis/stocks");
 const twitter = require("./apis/twitter");
+const TwitterStream = require("./apis/stream");
 
-MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
+MongoClient.connect(process.env.MLAB_URI, (error, db) => {
 
   if (error) {
     console.error("MongoDB error: " + error);
@@ -23,6 +24,7 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
   console.log("Connected to MongoDB");
 
   io.on("connection", (socket) => {
+
     console.log("User connected");
 
     db.collection("stocks").find({}).sort({ $natural: -1 }).limit(6).toArray((err, data) => {
@@ -61,14 +63,20 @@ MongoClient.connect("mongodb://localhost:27017/test", (error, db) => {
       });
     });
 
+    var stream = null;
+
     socket.on("request_tweets", (data) => {
 
-      twitter.getData(data).then((value) => {
+      if (stream !== null) {
+        stream.closeStream();
+      }
 
-        socket.emit("get_tweets", value.statuses);
-      }, (reason) => {
-        console.log(reason);
-      });
+      var callback = function(data) {
+        socket.emit("get_tweets", data);
+      };
+
+      stream = new TwitterStream(data, callback);
+      stream.openStream();
     });
 
     socket.on("delete_stock", (id) => {

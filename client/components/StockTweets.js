@@ -6,25 +6,27 @@ var StockTweets = React.createClass({
   formatDate: function(dateObj) {
     var dayName = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${ dayName[dateObj.getDay()] } ${ monthNames[dateObj.getMonth()] } ${ dateObj.getDate() } `
+    var dayClock = dateObj.getHours() >= 12 ? "PM" : "AM";
+    var minutes = (dateObj.getMinutes() >= 10 ? "" : "0") + dateObj.getMinutes();
+    console.log("minutes", minutes);
+    return `${ dayName[dateObj.getDay()] } ${ monthNames[dateObj.getMonth()] } ${ dateObj.getDate() } ${ dateObj.getHours() % 12 }:${ minutes } ${ dayClock } `
   },
   render: function() {
 
     var tweetList = this.props.tweets.map((tweet, index) => {
       return (
-        <div key={ index }>
+        <div className="tweetList" key={ index }>
           <div>{ this.formatDate(new Date(tweet.created_at)) }</div>
           <div>{ tweet.text }</div>
-          <div>{ tweet.retweet_count }</div>
         </div>
       );
     });
     return (
       <div className="stockTweets">
-        <h3 className="tweetHeader">Recent tweets for #AAPL</h3>
+        <h3 className="tweetHeader">Streaming tweets for { this.props.ticker }</h3>
         { tweetList }
       </div>
-    )
+    );
   }
 });
 

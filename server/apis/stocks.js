@@ -30,7 +30,7 @@ module.exports = {
       var request = https.request(fullUrl, (response) => {
 
         var string = "";
-
+        
         response.setEncoding("utf-8");
 
         response.on("data", (chunk) => {

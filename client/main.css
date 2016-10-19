@@ -136,7 +136,7 @@ body {
 
 .stockTweets {
   width: 100%;
-  padding: 1em;
+  padding: 2em;
   flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
   border: 1px solid rgba(0, 0, 0, 0.5);
@@ -145,4 +145,18 @@ body {
 
 .stockTweets > h3 {
   margin: 0;
+}
+
+.tweetList {
+  padding: 1em 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.tweetList > div {
+  padding: 0.2em 0;
+  line-height: 1.5;
+}
+
+.tweetList > :first-child {
+  font-style: italic;
 }

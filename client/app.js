@@ -30,6 +30,10 @@ var StockApp = React.createClass({
     }
   },
   handleTweetRequest: function(symbol) {
+    this.setState({
+      tweets: [],
+      ticker: symbol
+    });
     socket.emit("request_tweets", symbol);
   },
   handleRemoveStock: function(stockIndex) {
@@ -48,7 +52,8 @@ var StockApp = React.createClass({
     return {
       stocks: [],
       time: { days: 0, months: 0, years: 1 },
-      tweets: []
+      tweets: [],
+      ticker: ""
     };
   },
   componentDidMount: function() {
@@ -73,9 +78,17 @@ var StockApp = React.createClass({
       }
     });
 
-    socket.on("get_tweets", (tweetList) => {
+    socket.on("get_tweets", (tweetData) => {
+      console.log(tweetData)
+      if (this.state.tweets.length >= 10) {
+        this.state.tweets.shift();
+      }
+
+      var newTweets = this.state.tweets.slice();
+      newTweets.push(tweetData);
+
       this.setState({
-        tweets: tweetList
+        tweets: newTweets
       });
     });
 
@@ -90,7 +103,7 @@ var StockApp = React.createClass({
         <StockList stocks={ this.state.stocks } onRemoveStock={ this.handleRemoveStock } onAddTweets={ this.handleTweetRequest }/>
         <StockButtons onTimeChange= { this.handleTimeChange } />
         <StockGraph stocks={ this.state.stocks } time={ this.state.time }/>
-        <StockTweets tweets={ this.state.tweets } />
+        <StockTweets tweets={ this.state.tweets } ticker={ this.state.ticker } />
       </div>
     );
   }
