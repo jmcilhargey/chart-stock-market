@@ -1,5 +1,5 @@
 "use strict";
-
+require("./env");
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
@@ -22,8 +22,6 @@ MongoClient.connect(process.env.MLAB_URI, (error, db) => {
   console.log("Connected to MongoDB");
 
   io.on("connection", (socket) => {
-
-    console.log("User connected");
 
     db.collection("stocks").find({}).sort({ $natural: -1 }).limit(6).toArray((err, data) => {
       if (err) {
@@ -52,7 +50,7 @@ MongoClient.connect(process.env.MLAB_URI, (error, db) => {
               if (err) {
                 console.log(err);
               }
-              socket.emit("add_stock", doc);
+              io.emit("add_stock", doc);
             });
           });
         }
@@ -90,7 +88,7 @@ MongoClient.connect(process.env.MLAB_URI, (error, db) => {
           if (err) {
             console.log(err);
           }
-          socket.emit("get_stocks", data);
+          io.emit("get_stocks", data);
         });
       });
     });
