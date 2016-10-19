@@ -84,7 +84,7 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	var socket = io.connect("http://localhost:3000", { reconnection: false });
+	var socket = io.connect("https://stock-charts.herokuapp.com/", { reconnection: false, secure: true });
 
 	socket.on("connect", function () {
 	  console.log("Connected to socket server");
@@ -154,7 +154,7 @@
 	    });
 
 	    socket.on("get_tweets", function (tweetData) {
-	      console.log(tweetData);
+
 	      if (_this.state.tweets.length >= 10) {
 	        _this.state.tweets.shift();
 	      }

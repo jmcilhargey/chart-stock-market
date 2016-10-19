@@ -12,7 +12,7 @@ import StockList from "./components/StockList";
 import StockButtons from "./components/StockButtons";
 import StockTweets from "./components/StockTweets";
 
-var socket = io.connect("http://localhost:3000", { reconnection: false });
+var socket = io.connect("https://stock-charts.herokuapp.com/", { reconnection: false, secure: true });
 
 socket.on("connect", () => {
   console.log("Connected to socket server");
@@ -79,7 +79,7 @@ var StockApp = React.createClass({
     });
 
     socket.on("get_tweets", (tweetData) => {
-      console.log(tweetData)
+
       if (this.state.tweets.length >= 10) {
         this.state.tweets.shift();
       }
