@@ -1,7 +1,4 @@
-
 "use strict"
-
-require("../env");
 
 const crypto = require("crypto");
 const https = require("https");

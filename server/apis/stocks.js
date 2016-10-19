@@ -1,7 +1,5 @@
 "use strict";
 
-require("../env");
-
 const https = require("https");
 const qs = require("../helpers/querystring");
 const transform = require("../helpers/transformdata");
@@ -30,7 +28,7 @@ module.exports = {
       var request = https.request(fullUrl, (response) => {
 
         var string = "";
-        
+
         response.setEncoding("utf-8");
 
         response.on("data", (chunk) => {
